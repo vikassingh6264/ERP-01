@@ -293,6 +293,34 @@ class Invoice(BaseModel):
     paid_date: Optional[str] = None
     created_by: str
 
+# ============ CLIENT INTERACTION MODELS ============
+class InteractionCreate(BaseModel):
+    customer_email: str
+    customer_name: str
+    interaction_type: str  # call, email, meeting, note
+    subject: str
+    description: str
+    duration_minutes: Optional[int] = None
+    outcome: Optional[str] = None
+    next_follow_up: Optional[str] = None
+    attachments: Optional[List[str]] = None
+
+class Interaction(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    customer_email: str
+    customer_name: str
+    interaction_type: str
+    subject: str
+    description: str
+    duration_minutes: Optional[int] = None
+    outcome: Optional[str] = None
+    next_follow_up: Optional[str] = None
+    attachments: Optional[List[str]] = None
+    interaction_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    created_by: str
+    created_by_name: str
+
 # ============ AUTH FUNCTIONS ============
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
