@@ -536,6 +536,118 @@ async def get_payments(current_user: User = Depends(get_current_user)):
     payments = await db.payments.find({}, {"_id": 0}).to_list(1000)
     return payments
 
+# ============ ACTIVITY TIMELINE ROUTES ============
+@api_router.get("/activities/customer/{customer_email}")
+async def get_customer_activities(customer_email: str, current_user: User = Depends(get_current_user)):
+    activities = []
+    
+    # Get inquiry
+    inquiry = await db.inquiries.find_one({"email": customer_email}, {"_id": 0})
+    if inquiry:
+        activities.append({
+            "type": "inquiry",
+            "status": inquiry.get("status"),
+            "date": inquiry.get("created_at"),
+            "title": "Customer Inquiry Created",
+            "description": f"Product: {inquiry.get('product_requested')}",
+            "data": inquiry
+        })
+    
+    # Get samples
+    if inquiry:
+        samples = await db.samples.find({"inquiry_id": inquiry["id"]}, {"_id": 0}).to_list(100)
+        for sample in samples:
+            activities.append({
+                "type": "sample",
+                "status": sample.get("status"),
+                "date": sample.get("date_received"),
+                "title": f"Sample Received - {sample.get('sample_id')}",
+                "description": f"Product: {sample.get('product_name')}",
+                "data": sample
+            })
+            
+            # Get lab tests for this sample
+            tests = await db.lab_tests.find({"sample_id": sample["sample_id"]}, {"_id": 0}).to_list(100)
+            for test in tests:
+                activities.append({
+                    "type": "test",
+                    "status": test.get("status"),
+                    "date": test.get("test_date"),
+                    "title": f"Lab Test Completed",
+                    "description": f"Method: {test.get('test_method')}",
+                    "data": test
+                })
+    
+    # Get quotations
+    if inquiry:
+        quotations = await db.quotations.find({"inquiry_id": inquiry["id"]}, {"_id": 0}).to_list(100)
+        for quote in quotations:
+            activities.append({
+                "type": "quotation",
+                "status": quote.get("status"),
+                "date": quote.get("created_at"),
+                "title": f"Quotation Sent - {quote.get('quotation_number')}",
+                "description": f"Amount: {quote.get('currency')} {quote.get('total_amount')}",
+                "data": quote
+            })
+            
+            # Get sales orders for this quotation
+            orders = await db.sales_orders.find({"quotation_id": quote["id"]}, {"_id": 0}).to_list(100)
+            for order in orders:
+                activities.append({
+                    "type": "sales_order",
+                    "status": order.get("status"),
+                    "date": order.get("created_at"),
+                    "title": f"Sales Order - {order.get('order_number')}",
+                    "description": f"Amount: {order.get('currency')} {order.get('total_amount')}",
+                    "data": order
+                })
+                
+                # Get shipments for this order
+                shipments = await db.shipments.find({"sales_order_id": order["id"]}, {"_id": 0}).to_list(100)
+                for shipment in shipments:
+                    activities.append({
+                        "type": "shipment",
+                        "status": shipment.get("status"),
+                        "date": shipment.get("created_at"),
+                        "title": f"Shipment - {shipment.get('shipment_id')}",
+                        "description": f"Destination: {shipment.get('destination_country')}",
+                        "data": shipment
+                    })
+    
+    # Get payments
+    payments = await db.payments.find({"customer": customer_email}, {"_id": 0}).to_list(100)
+    for payment in payments:
+        activities.append({
+            "type": "payment",
+            "status": payment.get("status"),
+            "date": payment.get("payment_date"),
+            "title": f"Payment Received",
+            "description": f"Amount: {payment.get('currency')} {payment.get('amount')}",
+            "data": payment
+        })
+    
+    # Sort activities by date
+    activities.sort(key=lambda x: x["date"], reverse=True)
+    
+    return {"activities": activities, "current_stage": get_current_stage(activities)}
+
+def get_current_stage(activities):
+    if not activities:
+        return "No Activity"
+    
+    latest = activities[0]
+    stage_map = {
+        "inquiry": "Inquiry",
+        "sample": "Sample Testing",
+        "test": "Lab Testing",
+        "quotation": "Quotation",
+        "sales_order": "Order Confirmed",
+        "shipment": "In Transit",
+        "payment": "Completed"
+    }
+    return stage_map.get(latest["type"], "Unknown")
+
 # ============ DASHBOARD STATS ROUTES ============
 @api_router.get("/stats/marketing")
 async def get_marketing_stats(current_user: User = Depends(get_current_user)):

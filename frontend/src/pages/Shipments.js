@@ -5,14 +5,18 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card } from '../components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
-import { Plus } from 'lucide-react';
+import { Plus, FileDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { generateCommercialInvoice, generatePackingList, generateBillOfLading } from '../utils/documentGenerator';
 
 export const Shipments = () => {
   const [shipments, setShipments] = useState([]);
   const [salesOrders, setSalesOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDocDialogOpen, setIsDocDialogOpen] = useState(false);
+  const [selectedShipment, setSelectedShipment] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [formData, setFormData] = useState({
     sales_order_id: '',
     container_number: '',
@@ -63,6 +67,46 @@ export const Shipments = () => {
       destination_country: '',
       bl_number: '',
     });
+  };
+
+  const openDocumentDialog = async (shipment) => {
+    setSelectedShipment(shipment);
+    // Fetch the sales order details
+    try {
+      const order = salesOrders.find(o => o.id === shipment.sales_order_id);
+      setSelectedOrder(order);
+      setIsDocDialogOpen(true);
+    } catch (error) {
+      toast.error('Failed to load order details');
+    }
+  };
+
+  const handleGenerateDocument = (type) => {
+    if (!selectedShipment || !selectedOrder) {
+      toast.error('Missing shipment or order details');
+      return;
+    }
+
+    try {
+      switch (type) {
+        case 'invoice':
+          generateCommercialInvoice(selectedOrder, selectedShipment);
+          toast.success('Commercial Invoice downloaded');
+          break;
+        case 'packing':
+          generatePackingList(selectedOrder, selectedShipment);
+          toast.success('Packing List downloaded');
+          break;
+        case 'bol':
+          generateBillOfLading(selectedShipment, selectedOrder);
+          toast.success('Bill of Lading downloaded');
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      toast.error('Failed to generate document');
+    }
   };
 
   const getStatusColor = (status) => {
@@ -218,9 +262,21 @@ export const Shipments = () => {
                       {shipment.bl_number || <span className="text-slate-400 italic">Not assigned</span>}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getStatusColor(shipment.status)}`}>
-                        {shipment.status}
-                      </span>
+                      <div className="flex gap-2">
+                        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getStatusColor(shipment.status)}`}>
+                          {shipment.status}
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          data-testid="export-docs-button"
+                          onClick={() => openDocumentDialog(shipment)}
+                          className="border-teal-600 text-teal-600 hover:bg-teal-50"
+                        >
+                          <FileDown className="w-4 h-4 mr-1" />
+                          Docs
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -229,6 +285,85 @@ export const Shipments = () => {
           </table>
         </div>
       </Card>
+
+      {/* Export Documents Dialog */}
+      <Dialog open={isDocDialogOpen} onOpenChange={setIsDocDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Export Documents - {selectedShipment?.shipment_id}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-slate-600">
+              Generate and download export documents for this shipment
+            </p>
+            
+            <div className="grid grid-cols-1 gap-4">
+              <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer border-2 hover:border-teal-500" data-testid="commercial-invoice-card">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-slate-900">Commercial Invoice</h4>
+                    <p className="text-sm text-slate-600 mt-1">
+                      Official invoice for customs clearance and payment
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => handleGenerateDocument('invoice')}
+                    data-testid="generate-invoice-button"
+                    className="bg-slate-900 hover:bg-slate-800"
+                  >
+                    <FileDown className="w-4 h-4 mr-2" />
+                    Generate
+                  </Button>
+                </div>
+              </Card>
+
+              <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer border-2 hover:border-teal-500" data-testid="packing-list-card">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-slate-900">Packing List</h4>
+                    <p className="text-sm text-slate-600 mt-1">
+                      Detailed list of package contents and weights
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => handleGenerateDocument('packing')}
+                    data-testid="generate-packing-button"
+                    className="bg-slate-900 hover:bg-slate-800"
+                  >
+                    <FileDown className="w-4 h-4 mr-2" />
+                    Generate
+                  </Button>
+                </div>
+              </Card>
+
+              <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer border-2 hover:border-teal-500" data-testid="bol-card">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-slate-900">Bill of Lading</h4>
+                    <p className="text-sm text-slate-600 mt-1">
+                      Shipping document and title of goods
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => handleGenerateDocument('bol')}
+                    data-testid="generate-bol-button"
+                    className="bg-slate-900 hover:bg-slate-800"
+                  >
+                    <FileDown className="w-4 h-4 mr-2" />
+                    Generate
+                  </Button>
+                </div>
+              </Card>
+            </div>
+
+            <div className="pt-4 border-t">
+              <p className="text-xs text-slate-500">
+                All documents are generated in PDF format. Ensure all shipment and order details are accurate before generating documents.
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

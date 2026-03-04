@@ -5,13 +5,18 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card } from '../components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
-import { Plus, Edit } from 'lucide-react';
+import { Plus, Edit, Activity } from 'lucide-react';
 import { toast } from 'sonner';
+import { ActivityTimeline } from '../components/ActivityTimeline';
 
 export const Inquiries = () => {
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isActivityDialogOpen, setIsActivityDialogOpen] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [activities, setActivities] = useState([]);
+  const [currentStage, setCurrentStage] = useState('');
   const [formData, setFormData] = useState({
     customer_name: '',
     company_name: '',
@@ -70,6 +75,18 @@ export const Inquiries = () => {
       application: '',
       sample_required: false,
     });
+  };
+
+  const viewActivities = async (customerEmail, customerName) => {
+    try {
+      const response = await api.get(`/activities/customer/${customerEmail}`);
+      setActivities(response.data.activities);
+      setCurrentStage(response.data.current_stage);
+      setSelectedCustomer(customerName);
+      setIsActivityDialogOpen(true);
+    } catch (error) {
+      toast.error('Failed to fetch activities');
+    }
   };
 
   const getStatusColor = (status) => {
@@ -239,16 +256,27 @@ export const Inquiries = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <select
-                        data-testid="status-select"
-                        value={inquiry.status}
-                        onChange={(e) => updateStatus(inquiry.id, e.target.value)}
-                        className="text-sm border border-slate-300 rounded px-2 py-1"
-                      >
-                        <option value="New">New</option>
-                        <option value="Quoted">Quoted</option>
-                        <option value="Closed">Closed</option>
-                      </select>
+                      <div className="flex gap-2">
+                        <select
+                          data-testid="status-select"
+                          value={inquiry.status}
+                          onChange={(e) => updateStatus(inquiry.id, e.target.value)}
+                          className="text-sm border border-slate-300 rounded px-2 py-1"
+                        >
+                          <option value="New">New</option>
+                          <option value="Quoted">Quoted</option>
+                          <option value="Closed">Closed</option>
+                        </select>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          data-testid="view-activities-button"
+                          onClick={() => viewActivities(inquiry.email, inquiry.customer_name)}
+                          className="border-teal-600 text-teal-600 hover:bg-teal-50"
+                        >
+                          <Activity className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -257,6 +285,16 @@ export const Inquiries = () => {
           </table>
         </div>
       </Card>
+
+      {/* Activity Timeline Dialog */}
+      <Dialog open={isActivityDialogOpen} onOpenChange={setIsActivityDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Customer Activities - {selectedCustomer}</DialogTitle>
+          </DialogHeader>
+          <ActivityTimeline activities={activities} currentStage={currentStage} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
