@@ -36,6 +36,7 @@ export const DashboardLayout = ({ children }) => {
     { icon: Package, label: 'Chemical Inventory', path: '/chemicals', roles: ['Lab', 'Admin'] },
     { icon: FileText, label: 'Quotations', path: '/quotations', roles: ['Marketing', 'Admin'] },
     { icon: ShoppingCart, label: 'Sales Orders', path: '/sales-orders', roles: ['Marketing', 'Logistics', 'Admin'] },
+    { icon: FileText, label: 'Invoices', path: '/invoices', roles: ['Marketing', 'Admin'] },
     { icon: ShoppingCart, label: 'Purchase Orders', path: '/purchase-orders', roles: ['Logistics', 'Admin'] },
     { icon: Truck, label: 'Shipments', path: '/shipments', roles: ['Logistics', 'Admin'] },
     { icon: DollarSign, label: 'Payments', path: '/payments', roles: ['Admin'] },

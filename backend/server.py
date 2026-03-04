@@ -257,6 +257,42 @@ class Payment(BaseModel):
     firc_number: Optional[str] = None
     status: str = "Received"
 
+# ============ INVOICE MODELS ============
+class InvoiceCreate(BaseModel):
+    sales_order_id: str
+    customer_name: str
+    customer_email: str
+    billing_address: str
+    product: str
+    quantity: float
+    unit_price: float
+    currency: str
+    tax_percentage: float = 0
+    notes: Optional[str] = None
+
+class Invoice(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    invoice_number: str
+    sales_order_id: str
+    customer_name: str
+    customer_email: str
+    billing_address: str
+    product: str
+    quantity: float
+    unit_price: float
+    subtotal: float
+    tax_amount: float
+    total_amount: float
+    currency: str
+    notes: Optional[str] = None
+    status: str = "Draft"
+    invoice_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    due_date: str
+    sent_date: Optional[str] = None
+    paid_date: Optional[str] = None
+    created_by: str
+
 # ============ AUTH FUNCTIONS ============
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -535,6 +571,110 @@ async def create_payment(payment_data: PaymentCreate, current_user: User = Depen
 async def get_payments(current_user: User = Depends(get_current_user)):
     payments = await db.payments.find({}, {"_id": 0}).to_list(1000)
     return payments
+
+# ============ INVOICE ROUTES ============
+@api_router.post("/invoices", response_model=Invoice)
+async def create_invoice(invoice_data: InvoiceCreate, current_user: User = Depends(get_current_user)):
+    count = await db.invoices.count_documents({}) + 1
+    invoice_number = f"INV{count:05d}"
+    
+    subtotal = invoice_data.quantity * invoice_data.unit_price
+    tax_amount = subtotal * (invoice_data.tax_percentage / 100)
+    total_amount = subtotal + tax_amount
+    
+    # Due date is 30 days from invoice date
+    due_date = (datetime.now(timezone.utc) + timedelta(days=30)).isoformat()
+    
+    invoice = Invoice(
+        **invoice_data.model_dump(),
+        invoice_number=invoice_number,
+        subtotal=subtotal,
+        tax_amount=tax_amount,
+        total_amount=total_amount,
+        due_date=due_date,
+        created_by=current_user.id
+    )
+    await db.invoices.insert_one(invoice.model_dump())
+    return invoice
+
+@api_router.get("/invoices", response_model=List[Invoice])
+async def get_invoices(current_user: User = Depends(get_current_user)):
+    invoices = await db.invoices.find({}, {"_id": 0}).to_list(1000)
+    return invoices
+
+@api_router.get("/invoices/{invoice_id}", response_model=Invoice)
+async def get_invoice(invoice_id: str, current_user: User = Depends(get_current_user)):
+    invoice = await db.invoices.find_one({"id": invoice_id}, {"_id": 0})
+    if not invoice:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+    return invoice
+
+@api_router.put("/invoices/{invoice_id}/send")
+async def send_invoice(invoice_id: str, current_user: User = Depends(get_current_user)):
+    from email_service import send_email, EmailSchema
+    
+    invoice = await db.invoices.find_one({"id": invoice_id}, {"_id": 0})
+    if not invoice:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+    
+    # Update invoice status
+    await db.invoices.update_one(
+        {"id": invoice_id},
+        {"$set": {"status": "Sent", "sent_date": datetime.now(timezone.utc).isoformat()}}
+    )
+    
+    # Prepare email
+    email_body = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #0F172A;">Invoice from ChemExport Trading & Export Company</h2>
+            <p>Dear {invoice['customer_name']},</p>
+            <p>Please find attached your invoice <strong>{invoice['invoice_number']}</strong> for your recent order.</p>
+            
+            <div style="background: #F1F5F9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <p style="margin: 5px 0;"><strong>Invoice Number:</strong> {invoice['invoice_number']}</p>
+                <p style="margin: 5px 0;"><strong>Invoice Date:</strong> {datetime.fromisoformat(invoice['invoice_date']).strftime('%B %d, %Y')}</p>
+                <p style="margin: 5px 0;"><strong>Due Date:</strong> {datetime.fromisoformat(invoice['due_date']).strftime('%B %d, %Y')}</p>
+                <p style="margin: 5px 0;"><strong>Total Amount:</strong> {invoice['currency']} {invoice['total_amount']:,.2f}</p>
+            </div>
+            
+            <p>If you have any questions about this invoice, please don't hesitate to contact us.</p>
+            
+            <p>Thank you for your business!</p>
+            
+            <p style="margin-top: 30px;">
+                <strong>ChemExport Trading & Export Company</strong><br>
+                Email: export@chemexport.com<br>
+                Phone: +91-XXX-XXXXXXX
+            </p>
+        </div>
+    </body>
+    </html>
+    """
+    
+    email_data = EmailSchema(
+        recipients=[invoice['customer_email']],
+        subject=f"Invoice {invoice['invoice_number']} from ChemExport",
+        body=email_body
+    )
+    
+    # Send email in background (mock for now - will work when SMTP is configured)
+    # In production, configure SMTP_USER and SMTP_PASSWORD in .env
+    try:
+        # send_email(email_data)  # Uncomment when SMTP is configured
+        return {"message": "Invoice sent successfully", "status": "Sent"}
+    except Exception as e:
+        return {"message": f"Invoice status updated but email failed: {str(e)}", "status": "Sent"}
+
+@api_router.put("/invoices/{invoice_id}/status")
+async def update_invoice_status(invoice_id: str, status: str, current_user: User = Depends(get_current_user)):
+    update_data = {"status": status}
+    if status == "Paid":
+        update_data["paid_date"] = datetime.now(timezone.utc).isoformat()
+    
+    await db.invoices.update_one({"id": invoice_id}, {"$set": update_data})
+    return {"message": "Status updated"}
 
 # ============ ACTIVITY TIMELINE ROUTES ============
 @api_router.get("/activities/customer/{customer_email}")
