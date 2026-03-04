@@ -26,7 +26,8 @@ export const exportToPDF = (data, filename, title, columns) => {
   const doc = new jsPDF('landscape'); // Landscape for more columns
   
   // Title
-  doc.setFontSize(18);\n  doc.setFont(undefined, 'bold');
+  doc.setFontSize(18);
+  doc.setFont(undefined, 'bold');
   doc.text(title, 14, 20);
   
   // Date
