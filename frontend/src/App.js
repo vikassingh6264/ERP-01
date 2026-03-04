@@ -1,53 +1,142 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { Toaster } from './components/ui/sonner';
+import ProtectedRoute from './components/ProtectedRoute';
+import DashboardLayout from './components/DashboardLayout';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import Inquiries from './pages/Inquiries';
+import Samples from './pages/Samples';
+import LabTests from './pages/LabTests';
+import Chemicals from './pages/Chemicals';
+import Quotations from './pages/Quotations';
+import SalesOrders from './pages/SalesOrders';
+import PurchaseOrders from './pages/PurchaseOrders';
+import Shipments from './pages/Shipments';
+import Payments from './pages/Payments';
+import './App.css';
 
 function App() {
   return (
-    <div className="App">
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Navigate to="/dashboard" replace />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Dashboard />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inquiries"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Inquiries />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/samples"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Samples />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/lab-tests"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <LabTests />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chemicals"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Chemicals />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/quotations"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Quotations />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sales-orders"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <SalesOrders />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/purchase-orders"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <PurchaseOrders />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/shipments"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Shipments />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/payments"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Payments />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
         </Routes>
+        <Toaster position="top-right" richColors />
       </BrowserRouter>
-    </div>
+    </AuthProvider>
   );
 }
 
