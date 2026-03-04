@@ -12,7 +12,8 @@ import {
   DollarSign,
   LogOut,
   Menu,
-  X
+  X,
+  BarChart3
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { useState } from 'react';
@@ -40,6 +41,7 @@ export const DashboardLayout = ({ children }) => {
     { icon: ShoppingCart, label: 'Purchase Orders', path: '/purchase-orders', roles: ['Logistics', 'Admin'] },
     { icon: Truck, label: 'Shipments', path: '/shipments', roles: ['Logistics', 'Admin'] },
     { icon: DollarSign, label: 'Payments', path: '/payments', roles: ['Admin'] },
+    { icon: BarChart3, label: 'Reports & Analytics', path: '/reports', roles: ['Admin'] },
   ];
 
   const filteredMenuItems = menuItems.filter(item => 

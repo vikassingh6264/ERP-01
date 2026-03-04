@@ -16,6 +16,7 @@ import PurchaseOrders from './pages/PurchaseOrders';
 import Shipments from './pages/Shipments';
 import Payments from './pages/Payments';
 import Invoices from './pages/Invoices';
+import Reports from './pages/Reports';
 import './App.css';
 
 function App() {
@@ -140,6 +141,16 @@ function App() {
               <ProtectedRoute>
                 <DashboardLayout>
                   <Invoices />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Reports />
                 </DashboardLayout>
               </ProtectedRoute>
             }
