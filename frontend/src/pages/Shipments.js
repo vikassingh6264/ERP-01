@@ -5,18 +5,25 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card } from '../components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
-import { Plus, FileDown } from 'lucide-react';
+import { Plus, FileDown, Building2, Landmark } from 'lucide-react';
 import { toast } from 'sonner';
 import { generateCommercialInvoice, generatePackingList, generateBillOfLading } from '../utils/documentGenerator';
+import { generateCustomsDeclaration, generateCertificateOfOrigin, generateMSDS, generateBRC, generateFIRCSummary } from '../utils/customsDocuments';
 
 export const Shipments = () => {
   const [shipments, setShipments] = useState([]);
   const [salesOrders, setSalesOrders] = useState([]);
+  const [inquiries, setInquiries] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDocDialogOpen, setIsDocDialogOpen] = useState(false);
+  const [isCustomsDialogOpen, setIsCustomsDialogOpen] = useState(false);
+  const [isRBIDialogOpen, setIsRBIDialogOpen] = useState(false);
   const [selectedShipment, setSelectedShipment] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedInquiry, setSelectedInquiry] = useState(null);
+  const [selectedPayment, setSelectedPayment] = useState(null);
   const [formData, setFormData] = useState({
     sales_order_id: '',
     container_number: '',
@@ -32,12 +39,16 @@ export const Shipments = () => {
 
   const fetchData = async () => {
     try {
-      const [shipmentsRes, ordersRes] = await Promise.all([
+      const [shipmentsRes, ordersRes, inquiriesRes, paymentsRes] = await Promise.all([
         api.get('/shipments'),
         api.get('/sales-orders'),
+        api.get('/inquiries'),
+        api.get('/payments'),
       ]);
       setShipments(shipmentsRes.data);
       setSalesOrders(ordersRes.data);
+      setInquiries(inquiriesRes.data);
+      setPayments(paymentsRes.data);
     } catch (error) {
       toast.error('Failed to fetch data');
     } finally {
@@ -71,13 +82,38 @@ export const Shipments = () => {
 
   const openDocumentDialog = async (shipment) => {
     setSelectedShipment(shipment);
-    // Fetch the sales order details
     try {
       const order = salesOrders.find(o => o.id === shipment.sales_order_id);
       setSelectedOrder(order);
       setIsDocDialogOpen(true);
     } catch (error) {
       toast.error('Failed to load order details');
+    }
+  };
+
+  const openCustomsDialog = async (shipment) => {
+    setSelectedShipment(shipment);
+    try {
+      const order = salesOrders.find(o => o.id === shipment.sales_order_id);
+      const inquiry = inquiries.find(i => i.id === order?.quotation_id);
+      setSelectedOrder(order);
+      setSelectedInquiry(inquiry);
+      setIsCustomsDialogOpen(true);
+    } catch (error) {
+      toast.error('Failed to load details');
+    }
+  };
+
+  const openRBIDialog = async (shipment) => {
+    setSelectedShipment(shipment);
+    try {
+      const order = salesOrders.find(o => o.id === shipment.sales_order_id);
+      const payment = payments.find(p => p.customer === order?.customer_name);
+      setSelectedOrder(order);
+      setSelectedPayment(payment);
+      setIsRBIDialogOpen(true);
+    } catch (error) {
+      toast.error('Failed to load payment details');
     }
   };
 
@@ -106,6 +142,58 @@ export const Shipments = () => {
       }
     } catch (error) {
       toast.error('Failed to generate document');
+    }
+  };
+
+  const handleGenerateCustomsDoc = (type) => {
+    if (!selectedShipment || !selectedOrder) {
+      toast.error('Missing required details');
+      return;
+    }
+
+    try {
+      switch (type) {
+        case 'customs':
+          generateCustomsDeclaration(selectedShipment, selectedOrder, selectedInquiry);
+          toast.success('Customs Declaration downloaded');
+          break;
+        case 'coo':
+          generateCertificateOfOrigin(selectedShipment, selectedOrder);
+          toast.success('Certificate of Origin downloaded');
+          break;
+        case 'msds':
+          generateMSDS(selectedOrder, selectedInquiry);
+          toast.success('MSDS downloaded');
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      toast.error('Failed to generate customs document');
+    }
+  };
+
+  const handleGenerateRBIDoc = (type) => {
+    if (!selectedPayment || !selectedOrder || !selectedShipment) {
+      toast.error('Missing payment or shipment details');
+      return;
+    }
+
+    try {
+      switch (type) {
+        case 'brc':
+          generateBRC(selectedPayment, selectedOrder, selectedShipment);
+          toast.success('Bank Realization Certificate downloaded');
+          break;
+        case 'firc':
+          generateFIRCSummary([selectedPayment], new Date(selectedPayment.payment_date).toLocaleDateString(), new Date().toLocaleDateString());
+          toast.success('FIRC Summary downloaded');
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      toast.error('Failed to generate RBI document');
     }
   };
 
@@ -272,9 +360,29 @@ export const Shipments = () => {
                           data-testid="export-docs-button"
                           onClick={() => openDocumentDialog(shipment)}
                           className="border-teal-600 text-teal-600 hover:bg-teal-50"
+                          title="Export Documents"
                         >
-                          <FileDown className="w-4 h-4 mr-1" />
-                          Docs
+                          <FileDown className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          data-testid="customs-docs-button"
+                          onClick={() => openCustomsDialog(shipment)}
+                          className="border-blue-600 text-blue-600 hover:bg-blue-50"
+                          title="Customs Clearance"
+                        >
+                          <Building2 className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          data-testid="rbi-docs-button"
+                          onClick={() => openRBIDialog(shipment)}
+                          className="border-purple-600 text-purple-600 hover:bg-purple-50"
+                          title="RBI Compliance"
+                        >
+                          <Landmark className="w-4 h-4" />
                         </Button>
                       </div>
                     </td>
@@ -361,6 +469,167 @@ export const Shipments = () => {
                 All documents are generated in PDF format. Ensure all shipment and order details are accurate before generating documents.
               </p>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Customs Clearance Documents Dialog */}
+      <Dialog open={isCustomsDialogOpen} onOpenChange={setIsCustomsDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-blue-600" />
+              Customs Clearance Documents - {selectedShipment?.shipment_id}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-slate-600">
+              Generate required customs clearance documentation for international chemical export
+            </p>
+            
+            <div className="grid grid-cols-1 gap-4">
+              <Card className="p-4 hover:shadow-md transition-shadow border-2 hover:border-blue-500" data-testid="customs-declaration-card">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-slate-900">Customs Declaration Form</h4>
+                    <p className="text-sm text-slate-600 mt-1">
+                      Official declaration for export customs clearance with HS codes
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => handleGenerateCustomsDoc('customs')}
+                    data-testid="generate-customs-button"
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <FileDown className="w-4 h-4 mr-2" />
+                    Generate
+                  </Button>
+                </div>
+              </Card>
+
+              <Card className="p-4 hover:shadow-md transition-shadow border-2 hover:border-blue-500" data-testid="coo-card">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-slate-900">Certificate of Origin</h4>
+                    <p className="text-sm text-slate-600 mt-1">
+                      Official certificate confirming Indian origin with Chamber seal
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => handleGenerateCustomsDoc('coo')}
+                    data-testid="generate-coo-button"
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <FileDown className="w-4 h-4 mr-2" />
+                    Generate
+                  </Button>
+                </div>
+              </Card>
+
+              <Card className="p-4 hover:shadow-md transition-shadow border-2 hover:border-blue-500" data-testid="msds-card">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-slate-900">MSDS (Material Safety Data Sheet)</h4>
+                    <p className="text-sm text-slate-600 mt-1">
+                      Safety information and handling guidelines for chemical products
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => handleGenerateCustomsDoc('msds')}
+                    data-testid="generate-msds-button"
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <FileDown className="w-4 h-4 mr-2" />
+                    Generate
+                  </Button>
+                </div>
+              </Card>
+            </div>
+
+            <div className="pt-4 border-t bg-blue-50 rounded-lg p-3">
+              <p className="text-xs text-blue-900 font-medium">
+                ⚠️ Important: Ensure all product details, HS codes, and safety information are verified before submission to customs authorities.
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* RBI Compliance Documents Dialog */}
+      <Dialog open={isRBIDialogOpen} onOpenChange={setIsRBIDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Landmark className="w-5 h-5 text-purple-600" />
+              RBI Compliance Documents - {selectedShipment?.shipment_id}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-slate-600">
+              Generate foreign exchange compliance documents for Reserve Bank of India (RBI)
+            </p>
+            
+            <div className="grid grid-cols-1 gap-4">
+              <Card className="p-4 hover:shadow-md transition-shadow border-2 hover:border-purple-500" data-testid="brc-card">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-slate-900">Bank Realization Certificate (BRC)</h4>
+                    <p className="text-sm text-slate-600 mt-1">
+                      Certificate confirming foreign exchange realization from exports
+                    </p>
+                    {selectedPayment && (
+                      <div className="mt-2 text-xs text-slate-500">
+                        <span className="font-medium">Amount:</span> {selectedPayment.currency} {selectedPayment.amount.toLocaleString()} | 
+                        <span className="ml-2 font-medium">FIRC:</span> {selectedPayment.firc_number || 'Pending'}
+                      </div>
+                    )}
+                  </div>
+                  <Button
+                    onClick={() => handleGenerateRBIDoc('brc')}
+                    data-testid="generate-brc-button"
+                    className="bg-purple-600 hover:bg-purple-700"
+                    disabled={!selectedPayment}
+                  >
+                    <FileDown className="w-4 h-4 mr-2" />
+                    Generate
+                  </Button>
+                </div>
+              </Card>
+
+              <Card className="p-4 hover:shadow-md transition-shadow border-2 hover:border-purple-500" data-testid="firc-summary-card">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-slate-900">FIRC Summary Report</h4>
+                    <p className="text-sm text-slate-600 mt-1">
+                      Consolidated foreign inward remittance report for RBI
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => handleGenerateRBIDoc('firc')}
+                    data-testid="generate-firc-button"
+                    className="bg-purple-600 hover:bg-purple-700"
+                    disabled={!selectedPayment}
+                  >
+                    <FileDown className="w-4 h-4 mr-2" />
+                    Generate
+                  </Button>
+                </div>
+              </Card>
+            </div>
+
+            <div className="pt-4 border-t bg-purple-50 rounded-lg p-3">
+              <p className="text-xs text-purple-900 font-medium">
+                📋 RBI Compliance: All foreign exchange receipts must be reported within stipulated time as per FEMA regulations. Ensure FIRC numbers are recorded for all international payments.
+              </p>
+            </div>
+
+            {!selectedPayment && (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                <p className="text-xs text-yellow-900">
+                  ⚠️ No payment record found for this shipment. Please record the payment in the Payments module to generate RBI compliance documents.
+                </p>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
