@@ -1,0 +1,186 @@
+{
+  "project_name": "ChemExport ERP & Lab Management System",
+  "theme": "light",
+  "design_philosophy": {
+    "core_concept": "Scientific Precision meets Global Trade",
+    "emotional_archetype": "The Performance Pro (Lab Edition)",
+    "visual_style": "Swiss & High-Contrast",
+    "description": "A sterile, precise, and authoritative interface designed for accuracy and efficiency. White surfaces, deep slate text, and color-coded status indicators mimic the cleanliness of a laboratory and the rigorous structure of international logistics."
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Manrope, sans-serif",
+      "body": "IBM Plex Sans, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-4xl font-bold tracking-tight text-slate-900",
+      "h2": "text-3xl font-semibold tracking-tight text-slate-900",
+      "h3": "text-2xl font-semibold tracking-tight text-slate-900",
+      "h4": "text-xl font-medium text-slate-900",
+      "body_large": "text-lg text-slate-700 leading-relaxed",
+      "body_base": "text-base text-slate-600 leading-normal",
+      "caption": "text-sm text-slate-500 font-medium",
+      "label": "text-xs font-semibold uppercase tracking-wider text-slate-500"
+    },
+    "rules": [
+      "Headings must use Manrope.",
+      "Data tables and dense information must use IBM Plex Sans.",
+      "Numbers in dashboards (prices, weights) should use tabular-nums class for alignment.",
+      "Use 'tracking-tight' for all headings larger than 24px."
+    ]
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "DEFAULT": "#0F172A",
+        "foreground": "#F8FAFC",
+        "hover": "#1E293B",
+        "description": "Deep Slate - Used for Sidebar, Primary Buttons, Strong Headings"
+      },
+      "secondary": {
+        "DEFAULT": "#0D9488",
+        "foreground": "#FFFFFF",
+        "hover": "#0F766E",
+        "description": "Lab Teal - Used for Secondary Actions, Active States, Success indicators"
+      },
+      "accent": {
+        "DEFAULT": "#F97316",
+        "foreground": "#FFFFFF",
+        "description": "Safety Orange - Used for Alerts, 'Action Required', Warnings"
+      },
+      "background": {
+        "body": "#F1F5F9",
+        "card": "#FFFFFF",
+        "sidebar": "#0F172A"
+      },
+      "status": {
+        "success": "#10B981",
+        "warning": "#F59E0B",
+        "error": "#EF4444",
+        "info": "#3B82F6"
+      }
+    },
+    "usage_rules": [
+      "Never use gradients for backgrounds. Keep surfaces flat and clean.",
+      "Sidebar must be dark (Slate 900) to anchor the layout.",
+      "Cards must be White (#FFFFFF) with a subtle border (#E2E8F0).",
+      "Use text colors (slate-500/slate-900) to create hierarchy, not just font size."
+    ]
+  },
+  "layout": {
+    "spacing_system": "Generous (Tailwind Scale)",
+    "container_padding": "p-6 md:p-8 lg:p-10",
+    "grid_system": {
+      "dashboard_mode": "Bento Grid Mode B (High Density)",
+      "rules": [
+        "Base Grid: grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6",
+        "Metric Cards: col-span-1",
+        "Main Charts: col-span-2 or col-span-3",
+        "Lists/Feeds: col-span-1 row-span-2 (Tall)",
+        "Always use 'h-full' on cards within grid cells to ensure equal height."
+      ]
+    },
+    "surfaces": {
+      "card": "bg-white border border-slate-200 shadow-sm rounded-lg",
+      "glass": "bg-white/80 backdrop-blur-md border-b border-white/20 (Only for sticky headers)",
+      "dashboard_container": "bg-slate-100 min-h-screen"
+    }
+  },
+  "components": {
+    "button": {
+      "primary": "bg-slate-900 text-white hover:bg-slate-800 shadow-sm rounded-md px-4 py-2 font-medium transition-all",
+      "secondary": "bg-teal-600 text-white hover:bg-teal-700 shadow-sm rounded-md px-4 py-2 font-medium transition-all",
+      "outline": "border border-slate-300 bg-transparent hover:bg-slate-50 text-slate-700 rounded-md px-4 py-2 transition-all",
+      "ghost": "hover:bg-slate-100 text-slate-600 rounded-md px-3 py-2"
+    },
+    "input": {
+      "default": "border-slate-300 focus:border-teal-500 focus:ring-teal-500 rounded-md bg-white text-slate-900 placeholder:text-slate-400"
+    },
+    "card": {
+      "wrapper": "rounded-lg border border-slate-200 bg-white text-slate-950 shadow-sm",
+      "header": "flex flex-col space-y-1.5 p-6",
+      "content": "p-6 pt-0"
+    },
+    "table": {
+      "wrapper": "w-full overflow-auto rounded-md border border-slate-200 bg-white",
+      "header_row": "border-b border-slate-200 bg-slate-50 hover:bg-slate-50/50",
+      "row": "border-b border-slate-100 transition-colors hover:bg-slate-50/50",
+      "cell": "p-4 align-middle text-sm text-slate-600"
+    },
+    "badge": {
+      "default": "inline-flex items-center rounded-full border border-slate-200 px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 text-slate-950",
+      "status_success": "bg-emerald-100 text-emerald-800 border-emerald-200",
+      "status_warning": "bg-amber-100 text-amber-800 border-amber-200",
+      "status_error": "bg-red-100 text-red-800 border-red-200",
+      "status_info": "bg-blue-100 text-blue-800 border-blue-200"
+    }
+  },
+  "modules_design": {
+    "login": {
+      "layout": "Split Screen: Left side Form, Right side Image",
+      "image_url": "https://images.unsplash.com/photo-1580281845022-233f93de0671?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MjJ8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBjaGVtaWNhbCUyMGxhYm9yYXRvcnklMjBzY2llbnRpc3QlMjB3b3JraW5nfGVufDB8fHx8MTc3MjYyNjAyMXww&ixlib=rb-4.1.0&q=85",
+      "quote": "\"Precision in every drop, integrity in every shipment.\""
+    },
+    "dashboard_marketing": {
+      "focus": "Leads, Inquiries, Sales Pipeline",
+      "key_metrics": ["Total Inquiries", "Pending Quotes", "Conversion Rate", "Revenue MTD"],
+      "chart_types": ["Bar Chart (Sales by Region)", "Line Chart (Inquiry Trend)"]
+    },
+    "dashboard_lab": {
+      "focus": "Samples, Tests, Chemical Inventory",
+      "key_metrics": ["Pending Samples", "Completed Tests", "Low Stock Alerts", "Avg Testing Time"],
+      "chart_types": ["Donut Chart (Sample Status)", "Horizontal Bar (Chemical Usage)"]
+    },
+    "dashboard_logistics": {
+      "focus": "Shipments, Export Compliance, Delivery Status",
+      "key_metrics": ["Active Shipments", "Pending Dispatches", "Delayed Deliveries", "Freight Cost"],
+      "chart_types": ["Map/Globe (Active Routes - Use Static Image or Simple Map)", "Pie Chart (Shipment Mode)"],
+      "image_context": "https://images.unsplash.com/photo-1759272548470-d0686d071036?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2MzR8MHwxfHNlYXJjaHwyfHxnbG9iYWwlMjBzaGlwcGluZyUyMGNvbnRhaW5lciUyMHBvcnQlMjBsb2dpc3RpY3MlMjBleHBvcnR8ZW58MHx8fHwxNzcyNjI2MDIyfDA&ixlib=rb-4.1.0&q=85"
+    },
+    "dashboard_admin": {
+      "focus": "System Overview, User Management, High-level Stats",
+      "key_metrics": ["Total Users", "System Health", "Audit Logs", "Global Revenue"],
+      "chart_types": ["Area Chart (Revenue Growth)", "Bar Chart (User Activity)"]
+    }
+  },
+  "assets": {
+    "images": [
+      {
+        "category": "Login/Hero",
+        "url": "https://images.unsplash.com/photo-1580281845022-233f93de0671?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MjJ8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBjaGVtaWNhbCUyMGxhYm9yYXRvcnklMjBzY2llbnRpc3QlMjB3b3JraW5nfGVufDB8fHx8MTc3MjYyNjAyMXww&ixlib=rb-4.1.0&q=85",
+        "alt": "Scientist in Lab"
+      },
+      {
+        "category": "Logistics/Export",
+        "url": "https://images.unsplash.com/photo-1759272548470-d0686d071036?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2MzR8MHwxfHNlYXJjaHwyfHxnbG9iYWwlMjBzaGlwcGluZyUyMGNvbnRhaW5lciUyMHBvcnQlMjBsb2dpc3RpY3MlMjBleHBvcnR8ZW58MHx8fHwxNzcyNjI2MDIyfDA&ixlib=rb-4.1.0&q=85",
+        "alt": "Shipping Port"
+      },
+      {
+        "category": "Lab/Microscope",
+        "url": "https://images.unsplash.com/photo-1631556760585-2e846196d5a9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MjJ8MHwxfHNlYXJjaHw0fHxtb2Rlcm4lMjBjaGVtaWNhbCUyMGxhYm9yYXRvcnklMjBzY2llbnRpc3QlMjB3b3JraW5nfGVufDB8fHx8MTc3MjYyNjAyMXww&ixlib=rb-4.1.0&q=85",
+        "alt": "Microscope Work"
+      }
+    ],
+    "icons_library": "lucide-react"
+  },
+  "accessibility": {
+    "rules": [
+      "Ensure 4.5:1 contrast ratio for all text.",
+      "Interactive elements must have a focus ring.",
+      "Use semantic HTML (main, section, article, aside).",
+      "All images must have alt text.",
+      "Forms must have associated labels."
+    ]
+  },
+  "universal_guidelines": [
+    "Do not use gradients for backgrounds. Keep surfaces flat and clean.",
+    "Use 2-3x more spacing than feels comfortable.",
+    "Every interaction needs micro-animations - hover states, transitions.",
+    "Use specific properties for transitions (NOT transition: all).",
+    "All interactive elements MUST include data-testid attribute.",
+    "Components MUST use named exports.",
+    "Pages MUST use default exports."
+  ],
+  "instructions_to_main_agent": "Follow the 'modules_design' section to build specific dashboards. Use the color palette strictly to maintain the 'Professional Lab' aesthetic. Ensure the layout is responsive and mobile-friendly, although the primary use case is likely desktop for this complex ERP."
+}
