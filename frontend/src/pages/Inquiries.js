@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Plus, Edit, Activity } from 'lucide-react';
 import { toast } from 'sonner';
 import { ActivityTimeline } from '../components/ActivityTimeline';
+import { DataExportImport } from '../components/DataExportImport';
 
 export const Inquiries = () => {
   const [inquiries, setInquiries] = useState([]);
@@ -89,10 +90,50 @@ export const Inquiries = () => {
     }
   };
 
+  const handleImport = async (importedData) => {
+    try {
+      let successCount = 0;
+      for (const row of importedData) {
+        // Map Excel columns to API fields
+        const inquiryData = {
+          customer_name: row['Customer Name'] || row.customer_name || '',
+          company_name: row['Company Name'] || row.company_name || '',
+          email: row['Email'] || row.email || '',
+          country: row['Country'] || row.country || '',
+          product_requested: row['Product Requested'] || row.product_requested || '',
+          application: row['Application'] || row.application || '',
+          sample_required: row['Sample Required'] === 'Yes' || row.sample_required === true,
+        };
+
+        if (inquiryData.customer_name && inquiryData.email) {
+          await api.post('/inquiries', inquiryData);
+          successCount++;
+        }
+      }
+      
+      fetchInquiries();
+      toast.success(`Successfully imported ${successCount} inquiries`);
+    } catch (error) {
+      toast.error('Some records failed to import');
+    }
+  };
+
+  const exportColumns = [
+    { key: 'customer_name', label: 'Customer Name' },
+    { key: 'company_name', label: 'Company Name' },
+    { key: 'email', label: 'Email' },
+    { key: 'country', label: 'Country' },
+    { key: 'product_requested', label: 'Product Requested' },
+    { key: 'application', label: 'Application' },
+    { key: 'sample_required', label: 'Sample Required' },
+    { key: 'status', label: 'Status' },
+    { key: 'created_at', label: 'Created Date' },
+  ];
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'New': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'Quoted': return 'bg-amber-100 text-amber-800 border-amber-200';
+      case 'Quoted': return 'bg-slate-100 text-slate-800 border-slate-200';
       case 'Closed': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
       default: return 'bg-slate-100 text-slate-800 border-slate-200';
     }
@@ -113,13 +154,21 @@ export const Inquiries = () => {
             Manage customer product inquiries and requests
           </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button data-testid="create-inquiry-button" className="bg-slate-900 hover:bg-slate-800">
-              <Plus className="w-4 h-4 mr-2" />
-              New Inquiry
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-3">
+          <DataExportImport
+            data={inquiries}
+            filename="customer-inquiries"
+            title="Customer Inquiries"
+            columns={exportColumns}
+            onImport={handleImport}
+          />
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button data-testid="create-inquiry-button" className="bg-slate-900 hover:bg-slate-800">
+                <Plus className="w-4 h-4 mr-2" />
+                New Inquiry
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Create New Inquiry</DialogTitle>
@@ -213,6 +262,7 @@ export const Inquiries = () => {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <Card className="overflow-hidden">

@@ -17,11 +17,11 @@ export const ActivityTimeline = ({ activities, currentStage }) => {
 
   const getStatusColor = (type, status) => {
     const statusMap = {
-      'inquiry': { New: 'blue', Quoted: 'amber', Closed: 'emerald' },
+      'inquiry': { New: 'blue', Quoted: 'slate', Closed: 'emerald' },
       'sample': { Received: 'blue', Tested: 'emerald' },
       'test': { Completed: 'emerald' },
       'quotation': { Sent: 'blue', Accepted: 'emerald', Rejected: 'red' },
-      'sales_order': { Confirmed: 'blue', Processing: 'amber', Completed: 'emerald' },
+      'sales_order': { Confirmed: 'blue', Processing: 'slate', Completed: 'emerald' },
       'shipment': { 'In Transit': 'blue', Delivered: 'emerald', Delayed: 'red' },
       'payment': { Received: 'emerald' },
     };

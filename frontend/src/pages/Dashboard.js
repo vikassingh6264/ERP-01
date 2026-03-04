@@ -105,7 +105,7 @@ const MarketingDashboard = ({ stats }) => {
           icon={FileText}
           label="Pending Quotes"
           value={stats?.pending_quotes || 0}
-          color="bg-amber-500"
+          color="bg-slate-400"
           testId="pending-quotes-card"
         />
         <MetricCard
@@ -149,7 +149,7 @@ const LabDashboard = ({ stats }) => {
     datasets: [
       {
         data: [stats?.pending_samples || 0, 5, stats?.completed_tests || 0],
-        backgroundColor: ['#F59E0B', '#3B82F6', '#10B981'],
+        backgroundColor: ['#94A3B8', '#3B82F6', '#10B981'],
       },
     ],
   };
@@ -172,7 +172,7 @@ const LabDashboard = ({ stats }) => {
           icon={Package}
           label="Pending Samples"
           value={stats?.pending_samples || 0}
-          color="bg-amber-500"
+          color="bg-slate-400"
           testId="pending-samples-card"
         />
         <MetricCard
@@ -227,7 +227,7 @@ const LogisticsDashboard = ({ stats }) => {
     datasets: [
       {
         data: [30, 50, 20],
-        backgroundColor: ['#3B82F6', '#0D9488', '#F59E0B'],
+        backgroundColor: ['#3B82F6', '#0D9488', '#94A3B8'],
       },
     ],
   };
@@ -246,7 +246,7 @@ const LogisticsDashboard = ({ stats }) => {
           icon={Package}
           label="Pending Dispatches"
           value={stats?.pending_dispatches || 0}
-          color="bg-amber-500"
+          color="bg-slate-400"
           testId="pending-dispatches-card"
         />
         <MetricCard
@@ -335,7 +335,7 @@ const AdminDashboard = ({ stats }) => {
           icon={TrendingUp}
           label="Growth Rate"
           value="+24%"
-          color="bg-amber-500"
+          color="bg-slate-400"
           testId="growth-rate-card"
         />
       </div>

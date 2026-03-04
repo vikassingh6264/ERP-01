@@ -7,6 +7,7 @@ import { Card } from '../components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
 import { Plus, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import { DataExportImport } from '../components/DataExportImport';
 
 export const Chemicals = () => {
   const [chemicals, setChemicals] = useState([]);
@@ -62,6 +63,40 @@ export const Chemicals = () => {
     return chemical.stock_quantity <= chemical.minimum_stock_level;
   };
 
+  const handleImport = async (importedData) => {
+    try {
+      let successCount = 0;
+      for (const row of importedData) {
+        const chemicalData = {
+          chemical_name: row['Chemical Name'] || row.chemical_name || '',
+          stock_quantity: parseFloat(row['Stock Quantity'] || row.stock_quantity || 0),
+          unit: row['Unit'] || row.unit || 'ml',
+          minimum_stock_level: parseFloat(row['Minimum Stock Level'] || row.minimum_stock_level || 0),
+          supplier: row['Supplier'] || row.supplier || '',
+        };
+
+        if (chemicalData.chemical_name && chemicalData.supplier) {
+          await api.post('/chemicals', chemicalData);
+          successCount++;
+        }
+      }
+      
+      fetchChemicals();
+      toast.success(`Successfully imported ${successCount} chemicals`);
+    } catch (error) {
+      toast.error('Some records failed to import');
+    }
+  };
+
+  const exportColumns = [
+    { key: 'chemical_name', label: 'Chemical Name' },
+    { key: 'stock_quantity', label: 'Stock Quantity' },
+    { key: 'unit', label: 'Unit' },
+    { key: 'minimum_stock_level', label: 'Minimum Stock Level' },
+    { key: 'supplier', label: 'Supplier' },
+    { key: 'last_updated', label: 'Last Updated' },
+  ];
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -77,13 +112,21 @@ export const Chemicals = () => {
             Manage laboratory chemical stock and supplies
           </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button data-testid="add-chemical-button" className="bg-slate-900 hover:bg-slate-800">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Chemical
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-3">
+          <DataExportImport
+            data={chemicals}
+            filename="chemical-inventory"
+            title="Chemical Inventory"
+            columns={exportColumns}
+            onImport={handleImport}
+          />
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button data-testid="add-chemical-button" className="bg-slate-900 hover:bg-slate-800">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Chemical
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>Add New Chemical</DialogTitle>
@@ -161,6 +204,7 @@ export const Chemicals = () => {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <Card className="overflow-hidden">
