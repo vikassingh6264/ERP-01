@@ -196,6 +196,6 @@ export const mockHttpAdapter = (method, url, data) => {
             } catch (err) {
                 reject({ response: { status: 500, data: { detail: err.message } } });
             }
-        }, 300); // Add 300ms realistic network delay
+        }, 0); // No delay for better performance
     });
 };

@@ -22,10 +22,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      // Small artificial delay
-      await new Promise(resolve => setTimeout(resolve, 500));
       const response = mockLogin(email, password);
-
       localStorage.setItem('token', response.access_token);
       setToken(response.access_token);
       setUser(response.user);
@@ -37,9 +34,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, password, full_name, role) => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
       const response = mockRegister(email, password, full_name, role);
-
       localStorage.setItem('token', response.access_token);
       setToken(response.access_token);
       setUser(response.user);

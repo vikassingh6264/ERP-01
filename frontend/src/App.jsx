@@ -4,9 +4,9 @@ import { AuthProvider } from './context/AuthContext';
 import { Toaster } from './components/ui/sonner';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './components/DashboardLayout';
+import Login from './pages/Login';
 
 // Lazy loading page components
-const Login = lazy(() => import('./pages/Login'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Inquiries = lazy(() => import('./pages/Inquiries'));
 const Samples = lazy(() => import('./pages/Samples'));
