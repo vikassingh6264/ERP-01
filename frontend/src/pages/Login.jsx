@@ -17,7 +17,7 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (isLogin) {
       const result = await login(email, password);
       if (result.success) {
@@ -44,7 +44,7 @@ export const Login = () => {
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Manrope, sans-serif' }}>
-              ChemExport ERP
+              Ashoka Technovations ERP
             </h1>
             <p className="mt-3 text-lg text-slate-600">
               Laboratory & Export Management System
@@ -56,22 +56,20 @@ export const Login = () => {
               <button
                 data-testid="login-tab-button"
                 onClick={() => setIsLogin(true)}
-                className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${
-                  isLogin
+                className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${isLogin
                     ? 'bg-slate-900 text-white shadow-sm'
                     : 'text-slate-600 hover:text-slate-900'
-                }`}
+                  }`}
               >
                 Login
               </button>
               <button
                 data-testid="register-tab-button"
                 onClick={() => setIsLogin(false)}
-                className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${
-                  !isLogin
+                className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${!isLogin
                     ? 'bg-slate-900 text-white shadow-sm'
                     : 'text-slate-600 hover:text-slate-900'
-                }`}
+                  }`}
               >
                 Register
               </button>

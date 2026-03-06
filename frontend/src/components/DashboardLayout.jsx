@@ -1,14 +1,14 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { 
-  LayoutDashboard, 
-  Users, 
-  FlaskConical, 
-  Package, 
-  FileText, 
-  ShoppingCart, 
-  Truck, 
+import {
+  LayoutDashboard,
+  Users,
+  FlaskConical,
+  Package,
+  FileText,
+  ShoppingCart,
+  Truck,
   DollarSign,
   LogOut,
   Menu,
@@ -44,7 +44,7 @@ export const DashboardLayout = ({ children }) => {
     { icon: BarChart3, label: 'Reports & Analytics', path: '/reports', roles: ['Admin'] },
   ];
 
-  const filteredMenuItems = menuItems.filter(item => 
+  const filteredMenuItems = menuItems.filter(item =>
     item.roles.includes(user?.role)
   );
 
@@ -57,11 +57,10 @@ export const DashboardLayout = ({ children }) => {
           navigate(item.path);
           setSidebarOpen(false);
         }}
-        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
-          isActive
-            ? 'bg-teal-600 text-white shadow-sm'
-            : 'text-slate-300 hover:bg-slate-800 hover:text-white'
-        }`}
+        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${isActive
+          ? 'bg-teal-600 text-white shadow-sm'
+          : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+          }`}
       >
         <item.icon className="w-5 h-5" />
         <span>{item.label}</span>
@@ -75,7 +74,7 @@ export const DashboardLayout = ({ children }) => {
       <aside className="hidden lg:flex lg:flex-col w-64 bg-slate-900 text-white">
         <div className="p-6 border-b border-slate-800">
           <h1 className="text-2xl font-bold" style={{ fontFamily: 'Manrope, sans-serif' }}>
-            ChemExport
+            Ashoka Technovations
           </h1>
           <p className="text-xs text-slate-400 mt-1">ERP & Lab Management</p>
         </div>
@@ -115,7 +114,7 @@ export const DashboardLayout = ({ children }) => {
             <div className="p-6 border-b border-slate-800 flex justify-between items-center">
               <div>
                 <h1 className="text-2xl font-bold" style={{ fontFamily: 'Manrope, sans-serif' }}>
-                  ChemExport
+                  Ashoka Technovations
                 </h1>
                 <p className="text-xs text-slate-400 mt-1">ERP & Lab Management</p>
               </div>
