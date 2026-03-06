@@ -3,7 +3,33 @@ import api from '../utils/api';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { TrendingUp, TrendingDown, AlertTriangle, DollarSign, Users, Package, ArrowUpRight, ArrowDownRight, Target, Globe } from 'lucide-react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from 'chart.js';
 import { Line, Bar, Doughnut, Scatter } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 import {
   forecastRevenue,
   calculateGrowthRate,
