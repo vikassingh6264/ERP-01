@@ -1,18 +1,15 @@
-import axios from 'axios';
+import { mockHttpAdapter } from '../lib/mockApi';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const api = axios.create({
-  baseURL: API,
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Replaced Axios with a mock instance that routes to localStorage
+const api = {
+  get: (url, config) => mockHttpAdapter('get', url, null),
+  post: (url, data, config) => mockHttpAdapter('post', url, data),
+  put: (url, data, config) => mockHttpAdapter('put', url, data),
+  delete: (url, config) => mockHttpAdapter('delete', url, null),
+  interceptors: {
+    request: { use: () => { } },
+    response: { use: () => { } }
   }
-  return config;
-});
+};
 
 export default api;

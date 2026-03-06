@@ -159,7 +159,7 @@ export const Samples = () => {
                 <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" data-testid="submit-sample-button" className="bg-teal-600 hover:bg-teal-700">
+                <Button type="submit" data-testid="submit-sample-button" className="bg-slate-700 hover:bg-slate-800">
                   Record Sample
                 </Button>
               </div>

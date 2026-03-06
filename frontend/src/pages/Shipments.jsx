@@ -404,7 +404,7 @@ export const Shipments = () => {
             <p className="text-sm text-slate-600">
               Generate and download export documents for this shipment
             </p>
-            
+
             <div className="grid grid-cols-1 gap-4">
               <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer border-2 hover:border-teal-500" data-testid="commercial-invoice-card">
                 <div className="flex items-center justify-between">
@@ -486,7 +486,7 @@ export const Shipments = () => {
             <p className="text-sm text-slate-600">
               Generate required customs clearance documentation for international chemical export
             </p>
-            
+
             <div className="grid grid-cols-1 gap-4">
               <Card className="p-4 hover:shadow-md transition-shadow border-2 hover:border-blue-500" data-testid="customs-declaration-card">
                 <div className="flex items-center justify-between">
@@ -568,7 +568,7 @@ export const Shipments = () => {
             <p className="text-sm text-slate-600">
               Generate foreign exchange compliance documents for Reserve Bank of India (RBI)
             </p>
-            
+
             <div className="grid grid-cols-1 gap-4">
               <Card className="p-4 hover:shadow-md transition-shadow border-2 hover:border-purple-500" data-testid="brc-card">
                 <div className="flex items-center justify-between">
@@ -579,7 +579,7 @@ export const Shipments = () => {
                     </p>
                     {selectedPayment && (
                       <div className="mt-2 text-xs text-slate-500">
-                        <span className="font-medium">Amount:</span> {selectedPayment.currency} {selectedPayment.amount.toLocaleString()} | 
+                        <span className="font-medium">Amount:</span> {selectedPayment.currency} {selectedPayment.amount.toLocaleString()} |
                         <span className="ml-2 font-medium">FIRC:</span> {selectedPayment.firc_number || 'Pending'}
                       </div>
                     )}
@@ -624,8 +624,8 @@ export const Shipments = () => {
             </div>
 
             {!selectedPayment && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                <p className="text-xs text-yellow-900">
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                <p className="text-xs text-slate-900">
                   ⚠️ No payment record found for this shipment. Please record the payment in the Payments module to generate RBI compliance documents.
                 </p>
               </div>

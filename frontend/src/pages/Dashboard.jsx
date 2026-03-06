@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 import { Card } from '../components/ui/card';
-import { 
-  Users, 
-  FileText, 
-  ShoppingCart, 
+import {
+  Users,
+  FileText,
+  ShoppingCart,
   DollarSign,
   TrendingUp,
   Package,
@@ -33,7 +33,7 @@ export const Dashboard = () => {
       else if (user?.role === 'Lab') endpoint = '/stats/lab';
       else if (user?.role === 'Logistics') endpoint = '/stats/logistics';
       else if (user?.role === 'Admin') endpoint = '/stats/admin';
-      
+
       const response = await api.get(endpoint);
       setStats(response.data);
     } catch (error) {
@@ -73,7 +73,7 @@ const MarketingDashboard = ({ stats }) => {
       {
         label: 'Sales Revenue',
         data: [12000, 19000, 15000, 25000, 22000, 30000],
-        backgroundColor: '#0D9488',
+        backgroundColor: '#475569',
       },
     ],
   };
@@ -112,7 +112,7 @@ const MarketingDashboard = ({ stats }) => {
           icon={ShoppingCart}
           label="Sales Orders"
           value={stats?.sales_orders || 0}
-          color="bg-teal-600"
+          color="bg-slate-500"
           testId="sales-orders-card"
         />
         <MetricCard
@@ -160,7 +160,7 @@ const LabDashboard = ({ stats }) => {
       {
         label: 'Usage (L)',
         data: [45, 32, 28, 50, 20],
-        backgroundColor: '#0D9488',
+        backgroundColor: '#475569',
       },
     ],
   };
@@ -227,7 +227,7 @@ const LogisticsDashboard = ({ stats }) => {
     datasets: [
       {
         data: [30, 50, 20],
-        backgroundColor: ['#3B82F6', '#0D9488', '#94A3B8'],
+        backgroundColor: ['#3B82F6', '#475569', '#94A3B8'],
       },
     ],
   };
@@ -260,7 +260,7 @@ const LogisticsDashboard = ({ stats }) => {
           icon={DollarSign}
           label="Freight Cost"
           value="$45,320"
-          color="bg-teal-600"
+          color="bg-slate-500"
           testId="freight-cost-card"
         />
       </div>
@@ -299,8 +299,8 @@ const AdminDashboard = ({ stats }) => {
       {
         label: 'Revenue Growth',
         data: [50000, 75000, 95000, 120000],
-        borderColor: '#0D9488',
-        backgroundColor: 'rgba(13, 148, 136, 0.2)',
+        borderColor: '#475569',
+        backgroundColor: 'rgba(71, 85, 105, 0.2)',
         fill: true,
         tension: 0.4,
       },
@@ -321,7 +321,7 @@ const AdminDashboard = ({ stats }) => {
           icon={FileText}
           label="Total Inquiries"
           value={stats?.total_inquiries || 0}
-          color="bg-teal-600"
+          color="bg-slate-500"
           testId="admin-inquiries-card"
         />
         <MetricCard

@@ -79,37 +79,37 @@ export const LabTests = () => {
 
   const generatePDF = (test) => {
     const doc = new jsPDF();
-    
+
     doc.setFontSize(20);
     doc.text('Laboratory Test Report', 105, 20, { align: 'center' });
-    
+
     doc.setFontSize(12);
     doc.text(`Sample ID: ${test.sample_id}`, 20, 40);
     doc.text(`Test Method: ${test.test_method}`, 20, 50);
     doc.text(`Technician: ${test.technician_name}`, 20, 60);
     doc.text(`Test Date: ${new Date(test.test_date).toLocaleDateString()}`, 20, 70);
-    
+
     doc.text('Test Result:', 20, 85);
     doc.setFontSize(10);
     const resultLines = doc.splitTextToSize(test.test_result, 170);
     doc.text(resultLines, 20, 92);
-    
+
     if (test.chemicals_used && test.chemicals_used.length > 0) {
       doc.setFontSize(12);
       doc.text('Chemicals Used:', 20, 120);
-      
+
       const tableData = test.chemicals_used.map(chem => [
         chem.chemical_name,
         `${chem.quantity} ${chem.unit}`
       ]);
-      
+
       doc.autoTable({
         startY: 125,
         head: [['Chemical Name', 'Quantity']],
         body: tableData,
       });
     }
-    
+
     if (test.remarks) {
       const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : 160;
       doc.setFontSize(12);
@@ -118,7 +118,7 @@ export const LabTests = () => {
       const remarksLines = doc.splitTextToSize(test.remarks, 170);
       doc.text(remarksLines, 20, finalY + 7);
     }
-    
+
     doc.save(`test-report-${test.sample_id}.pdf`);
     toast.success('PDF downloaded successfully');
   };
@@ -290,7 +290,7 @@ export const LabTests = () => {
                 <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" data-testid="submit-test-button" className="bg-teal-600 hover:bg-teal-700">
+                <Button type="submit" data-testid="submit-test-button" className="bg-slate-700 hover:bg-slate-800">
                   Record Test
                 </Button>
               </div>

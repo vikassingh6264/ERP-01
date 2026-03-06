@@ -110,7 +110,7 @@ export const Inquiries = () => {
           successCount++;
         }
       }
-      
+
       fetchInquiries();
       toast.success(`Successfully imported ${successCount} inquiries`);
     } catch (error) {
@@ -169,99 +169,99 @@ export const Inquiries = () => {
                 New Inquiry
               </Button>
             </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Create New Inquiry</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4" data-testid="inquiry-form">
-              <div className="grid grid-cols-2 gap-4">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto !bg-slate-50">
+              <DialogHeader>
+                <DialogTitle>Create New Inquiry</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleSubmit} className="space-y-4" data-testid="inquiry-form">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="customer_name">Customer Name</Label>
+                    <Input
+                      id="customer_name"
+                      data-testid="customer-name-input"
+                      value={formData.customer_name}
+                      onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="company_name">Company Name</Label>
+                    <Input
+                      id="company_name"
+                      data-testid="company-name-input"
+                      value={formData.company_name}
+                      onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      data-testid="email-input"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="country">Country</Label>
+                    <Input
+                      id="country"
+                      data-testid="country-input"
+                      value={formData.country}
+                      onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
                 <div>
-                  <Label htmlFor="customer_name">Customer Name</Label>
+                  <Label htmlFor="product_requested">Product Requested</Label>
                   <Input
-                    id="customer_name"
-                    data-testid="customer-name-input"
-                    value={formData.customer_name}
-                    onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
+                    id="product_requested"
+                    data-testid="product-input"
+                    value={formData.product_requested}
+                    onChange={(e) => setFormData({ ...formData, product_requested: e.target.value })}
                     required
                   />
                 </div>
                 <div>
-                  <Label htmlFor="company_name">Company Name</Label>
-                  <Input
-                    id="company_name"
-                    data-testid="company-name-input"
-                    value={formData.company_name}
-                    onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+                  <Label htmlFor="application">Application</Label>
+                  <textarea
+                    id="application"
+                    data-testid="application-input"
+                    value={formData.application}
+                    onChange={(e) => setFormData({ ...formData, application: e.target.value })}
+                    className="w-full border border-slate-300 rounded-md px-3 py-2 min-h-24"
                     required
                   />
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    data-testid="email-input"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="sample_required"
+                    data-testid="sample-required-checkbox"
+                    checked={formData.sample_required}
+                    onChange={(e) => setFormData({ ...formData, sample_required: e.target.checked })}
+                    className="w-4 h-4"
                   />
+                  <Label htmlFor="sample_required" className="cursor-pointer">Sample Required</Label>
                 </div>
-                <div>
-                  <Label htmlFor="country">Country</Label>
-                  <Input
-                    id="country"
-                    data-testid="country-input"
-                    value={formData.country}
-                    onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                    required
-                  />
+                <div className="flex justify-end gap-3">
+                  <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" data-testid="submit-inquiry-button" className="bg-slate-700 hover:bg-slate-800">
+                    Create Inquiry
+                  </Button>
                 </div>
-              </div>
-              <div>
-                <Label htmlFor="product_requested">Product Requested</Label>
-                <Input
-                  id="product_requested"
-                  data-testid="product-input"
-                  value={formData.product_requested}
-                  onChange={(e) => setFormData({ ...formData, product_requested: e.target.value })}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="application">Application</Label>
-                <textarea
-                  id="application"
-                  data-testid="application-input"
-                  value={formData.application}
-                  onChange={(e) => setFormData({ ...formData, application: e.target.value })}
-                  className="w-full border border-slate-300 rounded-md px-3 py-2 min-h-24"
-                  required
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="sample_required"
-                  data-testid="sample-required-checkbox"
-                  checked={formData.sample_required}
-                  onChange={(e) => setFormData({ ...formData, sample_required: e.target.checked })}
-                  className="w-4 h-4"
-                />
-                <Label htmlFor="sample_required" className="cursor-pointer">Sample Required</Label>
-              </div>
-              <div className="flex justify-end gap-3">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit" data-testid="submit-inquiry-button" className="bg-teal-600 hover:bg-teal-700">
-                  Create Inquiry
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 

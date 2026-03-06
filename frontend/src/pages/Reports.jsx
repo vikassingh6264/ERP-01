@@ -4,12 +4,12 @@ import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { TrendingUp, TrendingDown, AlertTriangle, DollarSign, Users, Package, ArrowUpRight, ArrowDownRight, Target, Globe } from 'lucide-react';
 import { Line, Bar, Doughnut, Scatter } from 'react-chartjs-2';
-import { 
-  forecastRevenue, 
-  calculateGrowthRate, 
+import {
+  forecastRevenue,
+  calculateGrowthRate,
   analyzeTrend,
   calculateConfidenceInterval,
-  assessBusinessRisk 
+  assessBusinessRisk
 } from '../utils/analytics';
 import { toast } from 'sonner';
 
@@ -43,7 +43,7 @@ export const Reports = () => {
       });
 
       setReportData(processedData);
-      
+
       // Generate forecasts
       const forecasts = generateForecasts(processedData);
       setForecastData(forecasts);
@@ -58,31 +58,31 @@ export const Reports = () => {
     // Calculate monthly revenue
     const monthlyRevenue = calculateMonthlyMetrics(data.payments, 'amount');
     const monthlyOrders = calculateMonthlyMetrics(data.orders, null);
-    
+
     // Calculate KPIs
     const totalRevenue = data.payments.reduce((sum, p) => sum + p.amount, 0);
     const totalOrders = data.orders.length;
     const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-    
+
     // Customer metrics
     const uniqueCustomers = new Set(data.orders.map(o => o.customer_name)).size;
     const customerConcentration = calculateCustomerConcentration(data.orders);
-    
+
     // Growth metrics
     const revenueGrowth = calculateGrowthRate(
       monthlyRevenue[monthlyRevenue.length - 1],
       monthlyRevenue[monthlyRevenue.length - 2]
     );
-    
+
     // Geographic distribution
     const geoDistribution = calculateGeoDistribution(data.shipments);
-    
+
     // Invoice metrics
-    const overdueInvoices = data.invoices.filter(inv => 
+    const overdueInvoices = data.invoices.filter(inv =>
       new Date(inv.due_date) < new Date() && inv.status !== 'Paid'
     ).length;
     const overdueRate = data.invoices.length > 0 ? overdueInvoices / data.invoices.length : 0;
-    
+
     // Risk assessment
     const risks = assessBusinessRisk({
       customerConcentration,
@@ -140,7 +140,7 @@ export const Reports = () => {
   const generateForecasts = (data) => {
     const revenueForecast = forecastRevenue(data.monthlyRevenue, 6);
     const confidence = calculateConfidenceInterval(data.monthlyRevenue);
-    
+
     return {
       revenue: revenueForecast,
       confidence,
@@ -175,33 +175,30 @@ export const Reports = () => {
         <button
           data-testid="executive-tab"
           onClick={() => setActiveTab('executive')}
-          className={`px-6 py-3 font-semibold border-b-2 transition-colors ${
-            activeTab === 'executive'
-              ? 'border-teal-600 text-teal-600'
-              : 'border-transparent text-slate-600 hover:text-slate-900'
-          }`}
+          className={`px-6 py-3 font-semibold border-b-2 transition-colors ${activeTab === 'executive'
+            ? 'border-teal-600 text-teal-600'
+            : 'border-transparent text-slate-600 hover:text-slate-900'
+            }`}
         >
           C-Suite Dashboard
         </button>
         <button
           data-testid="forecasting-tab"
           onClick={() => setActiveTab('forecasting')}
-          className={`px-6 py-3 font-semibold border-b-2 transition-colors ${
-            activeTab === 'forecasting'
-              ? 'border-teal-600 text-teal-600'
-              : 'border-transparent text-slate-600 hover:text-slate-900'
-          }`}
+          className={`px-6 py-3 font-semibold border-b-2 transition-colors ${activeTab === 'forecasting'
+            ? 'border-teal-600 text-teal-600'
+            : 'border-transparent text-slate-600 hover:text-slate-900'
+            }`}
         >
           Predictive Analytics
         </button>
         <button
           data-testid="reports-tab"
           onClick={() => setActiveTab('reports')}
-          className={`px-6 py-3 font-semibold border-b-2 transition-colors ${
-            activeTab === 'reports'
-              ? 'border-teal-600 text-teal-600'
-              : 'border-transparent text-slate-600 hover:text-slate-900'
-          }`}
+          className={`px-6 py-3 font-semibold border-b-2 transition-colors ${activeTab === 'reports'
+            ? 'border-teal-600 text-teal-600'
+            : 'border-transparent text-slate-600 hover:text-slate-900'
+            }`}
         >
           Detailed Reports
         </button>
@@ -253,8 +250,8 @@ const ExecutiveDashboard = ({ reportData, forecastData }) => {
       {
         label: 'Forecasted Revenue',
         data: [...new Array(12).fill(null), ...forecastData.revenue],
-        borderColor: '#F59E0B',
-        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+        borderColor: '#94A3B8',
+        backgroundColor: 'rgba(148, 163, 184, 0.1)',
         borderDash: [5, 5],
         fill: true,
         tension: 0.4,
@@ -345,7 +342,7 @@ const ExecutiveDashboard = ({ reportData, forecastData }) => {
                 </span>
               </div>
             </div>
-            <div className="bg-teal-600 p-3 rounded-lg">
+            <div className="bg-slate-400 p-3 rounded-lg">
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
           </div>
@@ -364,9 +361,8 @@ const ExecutiveDashboard = ({ reportData, forecastData }) => {
               <div className="mt-3 space-y-2">
                 {reportData.risks.map((risk, index) => (
                   <div key={index} className="flex items-start gap-3">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      risk.level === 'high' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
-                    }`}>
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${risk.level === 'high' ? 'bg-red-100 text-red-800' : 'bg-slate-100 text-slate-800'
+                      }`}>
                       {risk.level.toUpperCase()}
                     </span>
                     <div>
@@ -387,10 +383,10 @@ const ExecutiveDashboard = ({ reportData, forecastData }) => {
           <h3 className="text-xl font-semibold text-slate-900 mb-4" style={{ fontFamily: 'Manrope, sans-serif' }}>
             Revenue Trend & 6-Month Forecast
           </h3>
-          <Line 
-            data={revenueChartData} 
-            options={{ 
-              responsive: true, 
+          <Line
+            data={revenueChartData}
+            options={{
+              responsive: true,
               maintainAspectRatio: true,
               plugins: {
                 legend: { position: 'bottom' },
@@ -407,7 +403,7 @@ const ExecutiveDashboard = ({ reportData, forecastData }) => {
                   }
                 }
               }
-            }} 
+            }}
           />
         </Card>
 
@@ -574,8 +570,8 @@ const DetailedReports = ({ reportData }) => {
           <p className="text-sm text-slate-600 mt-1">Stock levels, turnover rates, and reorder recommendations</p>
         </Button>
 
-        <Button className="h-auto p-6 bg-white border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 text-left flex-col items-start">
-          <Globe className="w-8 h-8 text-orange-600 mb-2" />
+        <Button className="h-auto p-6 bg-white border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 text-left flex-col items-start">
+          <Globe className="w-8 h-8 text-slate-500 mb-2" />
           <h4 className="font-bold text-slate-900">Export Report</h4>
           <p className="text-sm text-slate-600 mt-1">Shipment tracking, customs compliance, and logistics KPIs</p>
         </Button>
@@ -608,9 +604,8 @@ const DetailedReports = ({ reportData }) => {
                 <td className="px-6 py-4 text-sm font-semibold text-slate-900">{reportData.revenueGrowth.toFixed(1)}%</td>
                 <td className="px-6 py-4 text-sm text-slate-600">15%</td>
                 <td className="px-6 py-4">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    reportData.revenueGrowth >= 15 ? 'bg-emerald-100 text-emerald-800' : 'bg-yellow-100 text-yellow-800'
-                  }`}>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${reportData.revenueGrowth >= 15 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800'
+                    }`}>
                     {reportData.revenueGrowth >= 15 ? 'On Track' : 'Below Target'}
                   </span>
                 </td>
@@ -620,9 +615,8 @@ const DetailedReports = ({ reportData }) => {
                 <td className="px-6 py-4 text-sm font-semibold text-slate-900">{reportData.uniqueCustomers}</td>
                 <td className="px-6 py-4 text-sm text-slate-600">50+</td>
                 <td className="px-6 py-4">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    reportData.uniqueCustomers >= 50 ? 'bg-emerald-100 text-emerald-800' : 'bg-yellow-100 text-yellow-800'
-                  }`}>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${reportData.uniqueCustomers >= 50 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800'
+                    }`}>
                     {reportData.uniqueCustomers >= 50 ? 'On Track' : 'Growing'}
                   </span>
                 </td>
@@ -632,9 +626,8 @@ const DetailedReports = ({ reportData }) => {
                 <td className="px-6 py-4 text-sm font-semibold text-slate-900">${reportData.avgOrderValue.toLocaleString()}</td>
                 <td className="px-6 py-4 text-sm text-slate-600">$50,000</td>
                 <td className="px-6 py-4">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    reportData.avgOrderValue >= 50000 ? 'bg-emerald-100 text-emerald-800' : 'bg-yellow-100 text-yellow-800'
-                  }`}>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${reportData.avgOrderValue >= 50000 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800'
+                    }`}>
                     {reportData.avgOrderValue >= 50000 ? 'On Track' : 'Improving'}
                   </span>
                 </td>
@@ -644,9 +637,8 @@ const DetailedReports = ({ reportData }) => {
                 <td className="px-6 py-4 text-sm font-semibold text-slate-900">{(reportData.overdueRate * 100).toFixed(1)}%</td>
                 <td className="px-6 py-4 text-sm text-slate-600">&lt;10%</td>
                 <td className="px-6 py-4">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    reportData.overdueRate < 0.1 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
-                  }`}>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${reportData.overdueRate < 0.1 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+                    }`}>
                     {reportData.overdueRate < 0.1 ? 'Healthy' : 'Needs Attention'}
                   </span>
                 </td>
