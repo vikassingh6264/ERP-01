@@ -196,10 +196,10 @@ export const Payments = () => {
                     <td className="px-6 py-4 text-sm font-medium text-slate-900">{payment.invoice_number}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{payment.customer}</td>
                     <td className="px-6 py-4 text-sm text-slate-600 tabular-nums">
-                      {payment.currency} {payment.amount.toLocaleString()}
+                      {payment.currency} {payment.amount?.toLocaleString()}
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600">
-                      {new Date(payment.payment_date).toLocaleDateString()}
+                      {payment.payment_date ? new Date(payment.payment_date).toLocaleDateString() : <span className="text-slate-400 italic">N/A</span>}
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600">
                       {payment.bank_reference || <span className="text-slate-400 italic">N/A</span>}

@@ -196,7 +196,7 @@ export const Samples = () => {
                     <td className="px-6 py-4 text-sm text-slate-600">{sample.supplier_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{sample.product_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">
-                      {new Date(sample.date_received).toLocaleDateString()}
+                      {sample.date_received ? new Date(sample.date_received).toLocaleDateString() : <span className="text-slate-400 italic">N/A</span>}
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600">
                       {sample.assigned_technician || (

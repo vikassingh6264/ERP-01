@@ -326,7 +326,7 @@ export const LabTests = () => {
                     <td className="px-6 py-4 text-sm text-slate-600">{test.test_method}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{test.technician_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">
-                      {new Date(test.test_date).toLocaleDateString()}
+                      {test.test_date ? new Date(test.test_date).toLocaleDateString() : <span className="text-slate-400 italic">N/A</span>}
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600">
                       <div className="max-w-xs truncate">{test.test_result}</div>

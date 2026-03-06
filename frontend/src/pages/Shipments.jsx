@@ -186,7 +186,11 @@ export const Shipments = () => {
           toast.success('Bank Realization Certificate downloaded');
           break;
         case 'firc':
-          generateFIRCSummary([selectedPayment], new Date(selectedPayment.payment_date).toLocaleDateString(), new Date().toLocaleDateString());
+          generateFIRCSummary(
+            [selectedPayment],
+            selectedPayment.payment_date ? new Date(selectedPayment.payment_date).toLocaleDateString() : 'N/A',
+            new Date().toLocaleDateString()
+          );
           toast.success('FIRC Summary downloaded');
           break;
         default:
@@ -579,7 +583,7 @@ export const Shipments = () => {
                     </p>
                     {selectedPayment && (
                       <div className="mt-2 text-xs text-slate-500">
-                        <span className="font-medium">Amount:</span> {selectedPayment.currency} {selectedPayment.amount.toLocaleString()} |
+                        <span className="font-medium">Amount:</span> {selectedPayment.currency} {selectedPayment.amount?.toLocaleString()} |
                         <span className="ml-2 font-medium">FIRC:</span> {selectedPayment.firc_number || 'Pending'}
                       </div>
                     )}

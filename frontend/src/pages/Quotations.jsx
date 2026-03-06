@@ -252,7 +252,7 @@ export const Quotations = () => {
                     <td className="px-6 py-4 text-sm text-slate-600">{quote.customer_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{quote.product}</td>
                     <td className="px-6 py-4 text-sm text-slate-600 tabular-nums">
-                      {quote.currency} {quote.total_amount.toLocaleString()}
+                      {quote.currency} {quote.total_amount?.toLocaleString()}
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600">{quote.export_terms}</td>
                     <td className="px-6 py-4">

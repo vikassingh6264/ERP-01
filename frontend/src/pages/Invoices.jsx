@@ -141,7 +141,7 @@ export const Invoices = () => {
           successCount++;
         }
       }
-      
+
       fetchData();
       toast.success(`Successfully imported ${successCount} invoices`);
     } catch (error) {
@@ -401,11 +401,11 @@ export const Invoices = () => {
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600">{invoice.product}</td>
                     <td className="px-6 py-4 text-sm text-slate-600 tabular-nums font-semibold">
-                      {invoice.currency} {invoice.total_amount.toFixed(2)}
+                      {invoice.currency} {invoice.total_amount?.toFixed(2) || '0.00'}
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600">
-                      {new Date(invoice.due_date).toLocaleDateString()}
-                      {isOverdue(invoice) && invoice.status !== 'Paid' && (
+                      {invoice.due_date ? new Date(invoice.due_date).toLocaleDateString() : <span className="text-slate-400 italic">N/A</span>}
+                      {invoice.due_date && isOverdue(invoice) && invoice.status !== 'Paid' && (
                         <span className="ml-2 text-xs text-red-600 font-semibold">OVERDUE</span>
                       )}
                     </td>

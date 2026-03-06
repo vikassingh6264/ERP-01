@@ -194,7 +194,7 @@ export const PurchaseOrders = () => {
                     <td className="px-6 py-4 text-sm text-slate-600">{order.product}</td>
                     <td className="px-6 py-4 text-sm text-slate-600 tabular-nums">{order.quantity} KG</td>
                     <td className="px-6 py-4 text-sm text-slate-600 tabular-nums">
-                      {order.currency} {order.total_amount.toLocaleString()}
+                      {order.currency} {order.total_amount?.toLocaleString()}
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getStatusColor(order.status)}`}>
