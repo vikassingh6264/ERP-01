@@ -48,12 +48,12 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div>
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Manrope, sans-serif' }}>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Manrope, sans-serif' }}>
           {user?.role} Dashboard
         </h1>
-        <p className="mt-2 text-lg text-slate-600">
+        <p className="text-base text-slate-600">
           Welcome back, {user?.full_name}
         </p>
       </div>
@@ -92,8 +92,8 @@ const MarketingDashboard = ({ stats }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
           icon={Users}
           label="Total Inquiries"
@@ -124,19 +124,23 @@ const MarketingDashboard = ({ stats }) => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6" data-testid="sales-chart">
-          <h3 className="text-xl font-semibold text-slate-900 mb-4" style={{ fontFamily: 'Manrope, sans-serif' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card className="p-4" data-testid="sales-chart">
+          <h3 className="text-xl font-semibold text-slate-900 mb-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
             Sales by Month
           </h3>
-          <Bar data={barData} options={{ responsive: true, maintainAspectRatio: true }} />
+          <div className="h-48 flex items-center justify-center">
+            <Bar data={barData} options={{ responsive: true, maintainAspectRatio: false }} />
+          </div>
         </Card>
 
-        <Card className="p-6" data-testid="inquiry-trend-chart">
-          <h3 className="text-xl font-semibold text-slate-900 mb-4" style={{ fontFamily: 'Manrope, sans-serif' }}>
+        <Card className="p-4" data-testid="inquiry-trend-chart">
+          <h3 className="text-xl font-semibold text-slate-900 mb-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
             Inquiry Trend
           </h3>
-          <Line data={lineData} options={{ responsive: true, maintainAspectRatio: true }} />
+          <div className="h-48 flex items-center justify-center">
+            <Line data={lineData} options={{ responsive: true, maintainAspectRatio: false }} />
+          </div>
         </Card>
       </div>
     </div>
@@ -340,11 +344,13 @@ const AdminDashboard = ({ stats }) => {
         />
       </div>
 
-      <Card className="p-6" data-testid="revenue-growth-chart">
-        <h3 className="text-xl font-semibold text-slate-900 mb-4" style={{ fontFamily: 'Manrope, sans-serif' }}>
+      <Card className="p-4" data-testid="revenue-growth-chart">
+        <h3 className="text-xl font-semibold text-slate-900 mb-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
           Quarterly Revenue Growth
         </h3>
-        <Line data={areaData} options={{ responsive: true, maintainAspectRatio: true }} />
+        <div className="h-64">
+          <Line data={areaData} options={{ responsive: true, maintainAspectRatio: false }} />
+        </div>
       </Card>
     </div>
   );

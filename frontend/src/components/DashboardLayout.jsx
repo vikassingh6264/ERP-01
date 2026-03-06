@@ -72,14 +72,14 @@ export const DashboardLayout = ({ children }) => {
     <div className="flex h-screen bg-slate-100">
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex lg:flex-col w-64 bg-slate-900 text-white">
-        <div className="p-6 border-b border-slate-800">
+        <div className="p-4 border-b border-slate-800">
           <h1 className="text-2xl font-bold" style={{ fontFamily: 'Manrope, sans-serif' }}>
             Ashoka Technovations
           </h1>
-          <p className="text-xs text-slate-400 mt-1">ERP & Lab Management</p>
+          <p className="text-xs text-slate-400 mt-0.5">ERP & Lab Management</p>
         </div>
 
-        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+        <nav className="flex-1 overflow-y-auto p-3 space-y-0.5 scrollbar-hide">
           {filteredMenuItems.map((item, index) => (
             <MenuItem key={index} item={item} />
           ))}
@@ -111,19 +111,19 @@ export const DashboardLayout = ({ children }) => {
       {sidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black/50" onClick={() => setSidebarOpen(false)}>
           <aside className="w-64 h-full bg-slate-900 text-white" onClick={(e) => e.stopPropagation()}>
-            <div className="p-6 border-b border-slate-800 flex justify-between items-center">
+            <div className="p-4 border-b border-slate-800 flex justify-between items-center">
               <div>
                 <h1 className="text-2xl font-bold" style={{ fontFamily: 'Manrope, sans-serif' }}>
                   Ashoka Technovations
                 </h1>
-                <p className="text-xs text-slate-400 mt-1">ERP & Lab Management</p>
+                <p className="text-xs text-slate-400 mt-0.5">ERP & Lab Management</p>
               </div>
               <button onClick={() => setSidebarOpen(false)} className="text-slate-400 hover:text-white">
                 <X className="w-6 h-6" />
               </button>
             </div>
 
-            <nav className="p-4 space-y-2 overflow-y-auto">
+            <nav className="flex-1 overflow-y-auto p-3 space-y-0.5 scrollbar-hide">
               {filteredMenuItems.map((item, index) => (
                 <MenuItem key={index} item={item} />
               ))}
@@ -155,7 +155,7 @@ export const DashboardLayout = ({ children }) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar */}
-        <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between lg:justify-end">
+        <header className="bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between lg:justify-end">
           <button
             data-testid="mobile-menu-button"
             onClick={() => setSidebarOpen(true)}
@@ -164,8 +164,8 @@ export const DashboardLayout = ({ children }) => {
             <Menu className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-3">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium text-slate-900">{user?.full_name}</p>
+            <div className="hidden sm:block">
+              <p className="text-sm font-semibold text-slate-900 leading-tight">{user?.full_name}</p>
               <p className="text-xs text-slate-500">{user?.role}</p>
             </div>
           </div>
