@@ -175,6 +175,7 @@ export const Payments = () => {
           <table className="w-full" data-testid="payments-table">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 w-16">#</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Invoice #</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Customer</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Amount</th>
@@ -186,14 +187,15 @@ export const Payments = () => {
             <tbody>
               {payments.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
                     No payments found. Record your first payment to get started.
                   </td>
                 </tr>
               ) : (
-                payments.map((payment) => (
+                payments.map((payment, idx) => (
                   <tr key={payment.id} className="border-b border-slate-100 hover:bg-slate-50" data-testid="payment-row">
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{payment.invoice_number}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{idx + 1}.</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-600">{payment.invoice_number}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{payment.customer}</td>
                     <td className="px-6 py-4 text-sm text-slate-600 tabular-nums">
                       {payment.currency} {payment.amount?.toLocaleString()}

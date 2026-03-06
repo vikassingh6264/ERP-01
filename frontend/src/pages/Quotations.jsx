@@ -22,6 +22,7 @@ export const Quotations = () => {
     currency: 'USD',
     export_terms: 'FOB',
     validity_days: 30,
+    status: 'Sent',
   });
 
   useEffect(() => {
@@ -66,6 +67,7 @@ export const Quotations = () => {
       currency: 'USD',
       export_terms: 'FOB',
       validity_days: 30,
+      status: 'Sent',
     });
   };
 
@@ -230,6 +232,7 @@ export const Quotations = () => {
           <table className="w-full" data-testid="quotations-table">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 w-16">#</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Quote #</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Customer</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Product</th>
@@ -241,14 +244,15 @@ export const Quotations = () => {
             <tbody>
               {quotations.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
                     No quotations found. Create your first quotation to get started.
                   </td>
                 </tr>
               ) : (
-                quotations.map((quote) => (
+                quotations.map((quote, idx) => (
                   <tr key={quote.id} className="border-b border-slate-100 hover:bg-slate-50" data-testid="quotation-row">
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{quote.quotation_number}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{idx + 1}.</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900 text-slate-600">{quote.quotation_number}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{quote.customer_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{quote.product}</td>
                     <td className="px-6 py-4 text-sm text-slate-600 tabular-nums">

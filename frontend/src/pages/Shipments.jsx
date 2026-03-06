@@ -326,6 +326,7 @@ export const Shipments = () => {
           <table className="w-full" data-testid="shipments-table">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 w-16">#</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Shipment ID</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Container</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Shipping Line</th>
@@ -338,14 +339,15 @@ export const Shipments = () => {
             <tbody>
               {shipments.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan="8" className="px-6 py-8 text-center text-slate-500">
                     No shipments found. Create your first shipment to get started.
                   </td>
                 </tr>
               ) : (
-                shipments.map((shipment) => (
+                shipments.map((shipment, idx) => (
                   <tr key={shipment.id} className="border-b border-slate-100 hover:bg-slate-50" data-testid="shipment-row">
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{shipment.shipment_id}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{idx + 1}.</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900 text-slate-600">{shipment.shipment_id}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{shipment.container_number}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{shipment.shipping_line}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{shipment.port_of_loading}</td>

@@ -592,6 +592,7 @@ const DetailedReports = ({ reportData }) => {
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900 w-16">#</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Metric</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Current Value</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900">Target</th>
@@ -600,7 +601,8 @@ const DetailedReports = ({ reportData }) => {
             </thead>
             <tbody>
               <tr className="border-b border-slate-100">
-                <td className="px-6 py-4 text-sm text-slate-900">Revenue Growth Rate</td>
+                <td className="px-6 py-4 text-sm font-medium text-slate-900">1.</td>
+                <td className="px-6 py-4 text-sm text-slate-900 font-medium">Revenue Growth Rate</td>
                 <td className="px-6 py-4 text-sm font-semibold text-slate-900">{reportData.revenueGrowth.toFixed(1)}%</td>
                 <td className="px-6 py-4 text-sm text-slate-600">15%</td>
                 <td className="px-6 py-4">
@@ -611,7 +613,8 @@ const DetailedReports = ({ reportData }) => {
                 </td>
               </tr>
               <tr className="border-b border-slate-100">
-                <td className="px-6 py-4 text-sm text-slate-900">Active Customers</td>
+                <td className="px-6 py-4 text-sm font-medium text-slate-900">2.</td>
+                <td className="px-6 py-4 text-sm text-slate-900 font-medium">Active Customers</td>
                 <td className="px-6 py-4 text-sm font-semibold text-slate-900">{reportData.uniqueCustomers}</td>
                 <td className="px-6 py-4 text-sm text-slate-600">50+</td>
                 <td className="px-6 py-4">
@@ -622,7 +625,8 @@ const DetailedReports = ({ reportData }) => {
                 </td>
               </tr>
               <tr className="border-b border-slate-100">
-                <td className="px-6 py-4 text-sm text-slate-900">Average Order Value</td>
+                <td className="px-6 py-4 text-sm font-medium text-slate-900">3.</td>
+                <td className="px-6 py-4 text-sm text-slate-900 font-medium">Average Order Value</td>
                 <td className="px-6 py-4 text-sm font-semibold text-slate-900">${reportData.avgOrderValue.toLocaleString()}</td>
                 <td className="px-6 py-4 text-sm text-slate-600">$50,000</td>
                 <td className="px-6 py-4">
@@ -633,7 +637,8 @@ const DetailedReports = ({ reportData }) => {
                 </td>
               </tr>
               <tr>
-                <td className="px-6 py-4 text-sm text-slate-900">Overdue Invoice Rate</td>
+                <td className="px-6 py-4 text-sm font-medium text-slate-900">4.</td>
+                <td className="px-6 py-4 text-sm text-slate-900 font-medium">Overdue Invoice Rate</td>
                 <td className="px-6 py-4 text-sm font-semibold text-slate-900">{(reportData.overdueRate * 100).toFixed(1)}%</td>
                 <td className="px-6 py-4 text-sm text-slate-600">&lt;10%</td>
                 <td className="px-6 py-4">
