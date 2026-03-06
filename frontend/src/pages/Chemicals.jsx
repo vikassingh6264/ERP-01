@@ -80,7 +80,7 @@ export const Chemicals = () => {
           successCount++;
         }
       }
-      
+
       fetchChemicals();
       toast.success(`Successfully imported ${successCount} chemicals`);
     } catch (error) {
@@ -127,83 +127,83 @@ export const Chemicals = () => {
                 Add Chemical
               </Button>
             </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Add New Chemical</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4" data-testid="chemical-form">
-              <div>
-                <Label htmlFor="chemical_name">Chemical Name</Label>
-                <Input
-                  id="chemical_name"
-                  data-testid="chemical-name-input"
-                  value={formData.chemical_name}
-                  onChange={(e) => setFormData({ ...formData, chemical_name: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Add New Chemical</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleSubmit} className="space-y-4" data-testid="chemical-form">
                 <div>
-                  <Label htmlFor="stock_quantity">Stock Quantity</Label>
+                  <Label htmlFor="chemical_name">Chemical Name</Label>
                   <Input
-                    id="stock_quantity"
-                    data-testid="stock-quantity-input"
+                    id="chemical_name"
+                    data-testid="chemical-name-input"
+                    value={formData.chemical_name}
+                    onChange={(e) => setFormData({ ...formData, chemical_name: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="stock_quantity">Stock Quantity</Label>
+                    <Input
+                      id="stock_quantity"
+                      data-testid="stock-quantity-input"
+                      type="number"
+                      step="0.01"
+                      value={formData.stock_quantity}
+                      onChange={(e) => setFormData({ ...formData, stock_quantity: parseFloat(e.target.value) })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="unit">Unit</Label>
+                    <select
+                      id="unit"
+                      data-testid="unit-select"
+                      value={formData.unit}
+                      onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+                      className="w-full border border-slate-300 rounded-md px-3 py-2"
+                    >
+                      <option value="ml">ml</option>
+                      <option value="L">L</option>
+                      <option value="g">g</option>
+                      <option value="kg">kg</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="minimum_stock_level">Minimum Stock Level</Label>
+                  <Input
+                    id="minimum_stock_level"
+                    data-testid="min-stock-input"
                     type="number"
                     step="0.01"
-                    value={formData.stock_quantity}
-                    onChange={(e) => setFormData({ ...formData, stock_quantity: parseFloat(e.target.value) })}
+                    value={formData.minimum_stock_level}
+                    onChange={(e) => setFormData({ ...formData, minimum_stock_level: parseFloat(e.target.value) })}
                     required
                   />
                 </div>
                 <div>
-                  <Label htmlFor="unit">Unit</Label>
-                  <select
-                    id="unit"
-                    data-testid="unit-select"
-                    value={formData.unit}
-                    onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2"
-                  >
-                    <option value="ml">ml</option>
-                    <option value="L">L</option>
-                    <option value="g">g</option>
-                    <option value="kg">kg</option>
-                  </select>
+                  <Label htmlFor="supplier">Supplier</Label>
+                  <Input
+                    id="supplier"
+                    data-testid="supplier-input"
+                    value={formData.supplier}
+                    onChange={(e) => setFormData({ ...formData, supplier: e.target.value })}
+                    required
+                  />
                 </div>
-              </div>
-              <div>
-                <Label htmlFor="minimum_stock_level">Minimum Stock Level</Label>
-                <Input
-                  id="minimum_stock_level"
-                  data-testid="min-stock-input"
-                  type="number"
-                  step="0.01"
-                  value={formData.minimum_stock_level}
-                  onChange={(e) => setFormData({ ...formData, minimum_stock_level: parseFloat(e.target.value) })}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="supplier">Supplier</Label>
-                <Input
-                  id="supplier"
-                  data-testid="supplier-input"
-                  value={formData.supplier}
-                  onChange={(e) => setFormData({ ...formData, supplier: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="flex justify-end gap-3">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit" data-testid="submit-chemical-button" className="bg-teal-600 hover:bg-teal-700">
-                  Add Chemical
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+                <div className="flex justify-end gap-3">
+                  <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" data-testid="submit-chemical-button" className="bg-teal-600 hover:bg-teal-700">
+                    Add Chemical
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -212,6 +212,7 @@ export const Chemicals = () => {
           <table className="w-full" data-testid="chemicals-table">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 w-16">#</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Chemical Name</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Stock Quantity</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Min Level</th>
@@ -223,14 +224,15 @@ export const Chemicals = () => {
             <tbody>
               {chemicals.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
                     No chemicals found. Add your first chemical to get started.
                   </td>
                 </tr>
               ) : (
-                chemicals.map((chemical) => (
+                chemicals.map((chemical, idx) => (
                   <tr key={chemical.id} className="border-b border-slate-100 hover:bg-slate-50" data-testid="chemical-row">
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{chemical.chemical_name}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{idx + 1}.</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900 text-slate-600">{chemical.chemical_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600 tabular-nums">
                       {chemical.stock_quantity}
                     </td>

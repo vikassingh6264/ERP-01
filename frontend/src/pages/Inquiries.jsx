@@ -270,6 +270,7 @@ export const Inquiries = () => {
           <table className="w-full" data-testid="inquiries-table">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 w-16">#</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Customer</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Company</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Product</th>
@@ -282,14 +283,15 @@ export const Inquiries = () => {
             <tbody>
               {inquiries.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan="8" className="px-6 py-8 text-center text-slate-500">
                     No inquiries found. Create your first inquiry to get started.
                   </td>
                 </tr>
               ) : (
-                inquiries.map((inquiry) => (
+                inquiries.map((inquiry, idx) => (
                   <tr key={inquiry.id} className="border-b border-slate-100 hover:bg-slate-50" data-testid="inquiry-row">
-                    <td className="px-6 py-4 text-sm text-slate-900">{inquiry.customer_name}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{idx + 1}.</td>
+                    <td className="px-6 py-4 text-sm text-slate-900 font-medium">{inquiry.customer_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{inquiry.company_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{inquiry.product_requested}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{inquiry.country}</td>

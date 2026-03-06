@@ -173,6 +173,7 @@ export const Samples = () => {
           <table className="w-full" data-testid="samples-table">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 w-16">#</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Sample ID</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Supplier</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Product</th>
@@ -185,14 +186,15 @@ export const Samples = () => {
             <tbody>
               {samples.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan="8" className="px-6 py-8 text-center text-slate-500">
                     No samples found. Record your first sample to get started.
                   </td>
                 </tr>
               ) : (
-                samples.map((sample) => (
+                samples.map((sample, idx) => (
                   <tr key={sample.id} className="border-b border-slate-100 hover:bg-slate-50" data-testid="sample-row">
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{sample.sample_id}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{idx + 1}.</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900 text-slate-600">{sample.sample_id}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{sample.supplier_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{sample.product_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">

@@ -375,6 +375,7 @@ export const Invoices = () => {
           <table className="w-full" data-testid="invoices-table">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 w-16">#</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Invoice #</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Customer</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Product</th>
@@ -387,14 +388,15 @@ export const Invoices = () => {
             <tbody>
               {invoices.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan="8" className="px-6 py-8 text-center text-slate-500">
                     No invoices found. Create your first invoice to get started.
                   </td>
                 </tr>
               ) : (
-                invoices.map((invoice) => (
+                invoices.map((invoice, idx) => (
                   <tr key={invoice.id} className="border-b border-slate-100 hover:bg-slate-50" data-testid="invoice-row">
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{invoice.invoice_number}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{idx + 1}.</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-600">{invoice.invoice_number}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">
                       <div>{invoice.customer_name}</div>
                       <div className="text-xs text-slate-400">{invoice.customer_email}</div>

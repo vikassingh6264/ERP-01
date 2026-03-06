@@ -304,6 +304,7 @@ export const LabTests = () => {
           <table className="w-full" data-testid="tests-table">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 w-16">#</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Sample ID</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Test Method</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Technician</th>
@@ -315,14 +316,15 @@ export const LabTests = () => {
             <tbody>
               {tests.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
                     No tests found. Record your first test to get started.
                   </td>
                 </tr>
               ) : (
-                tests.map((test) => (
+                tests.map((test, idx) => (
                   <tr key={test.id} className="border-b border-slate-100 hover:bg-slate-50" data-testid="test-row">
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{test.sample_id}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{idx + 1}.</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900 text-slate-600">{test.sample_id}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{test.test_method}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{test.technician_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">
