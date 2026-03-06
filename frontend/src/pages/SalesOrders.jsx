@@ -246,7 +246,6 @@ export const SalesOrders = () => {
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 w-16">#</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Order #</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Customer</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Product</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Quantity</th>
@@ -257,7 +256,7 @@ export const SalesOrders = () => {
             <tbody>
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan="6" className="px-6 py-8 text-center text-slate-500">
                     No sales orders found. Create your first order to get started.
                   </td>
                 </tr>
@@ -265,7 +264,6 @@ export const SalesOrders = () => {
                 orders.map((order, idx) => (
                   <tr key={order.id} className="border-b border-slate-100 hover:bg-slate-50" data-testid="order-row">
                     <td className="px-6 py-4 text-sm font-medium text-slate-900">{idx + 1}.</td>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-600">{order.order_number}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{order.customer_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{order.product}</td>
                     <td className="px-6 py-4 text-sm text-slate-600 tabular-nums">{order.quantity} KG</td>

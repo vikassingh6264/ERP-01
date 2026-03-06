@@ -201,7 +201,7 @@ export const Payments = () => {
                       {payment.currency} {payment.amount?.toLocaleString()}
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600">
-                      {payment.payment_date ? new Date(payment.payment_date).toLocaleDateString() : <span className="text-slate-400 italic">N/A</span>}
+                      {new Date().toISOString().split('T')[0]}
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600">
                       {payment.bank_reference || <span className="text-slate-400 italic">N/A</span>}

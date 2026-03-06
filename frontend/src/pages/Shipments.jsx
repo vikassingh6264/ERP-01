@@ -327,7 +327,6 @@ export const Shipments = () => {
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 w-16">#</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Shipment ID</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Container</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Shipping Line</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Port</th>
@@ -347,7 +346,6 @@ export const Shipments = () => {
                 shipments.map((shipment, idx) => (
                   <tr key={shipment.id} className="border-b border-slate-100 hover:bg-slate-50" data-testid="shipment-row">
                     <td className="px-6 py-4 text-sm font-medium text-slate-900">{idx + 1}.</td>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900 text-slate-600">{shipment.shipment_id}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{shipment.container_number}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{shipment.shipping_line}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{shipment.port_of_loading}</td>
