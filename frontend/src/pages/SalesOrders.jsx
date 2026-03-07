@@ -272,7 +272,7 @@ export const SalesOrders = () => {
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getStatusColor(order.status)}`}>
-                        {order.status}
+                        Active
                       </span>
                     </td>
                   </tr>

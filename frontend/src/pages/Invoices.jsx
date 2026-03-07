@@ -58,6 +58,7 @@ export const Invoices = () => {
         quantity: selectedOrder.quantity,
         unit_price: selectedOrder.total_amount / selectedOrder.quantity,
         currency: selectedOrder.currency,
+        billing_address: selectedOrder.billing_address || '',
       });
     }
   };
@@ -321,7 +322,7 @@ export const Invoices = () => {
                       type="number"
                       step="0.01"
                       value={formData.tax_percentage}
-                      onChange={(e) => setFormData({ ...formData, tax_percentage: parseFloat(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, tax_percentage: parseFloat(e.target.value) || 0 })}
                     />
                   </div>
                 </div>
@@ -428,7 +429,7 @@ export const Invoices = () => {
                           size="sm"
                           variant="outline"
                           data-testid="preview-invoice-button"
-                       //   onClick={() => handlePreview(invoice)}
+                          onClick={() => handlePreview(invoice)}
                           className="border-slate-300 text-slate-700 hover:bg-slate-50"
                           title="Preview"
                         >
@@ -438,7 +439,7 @@ export const Invoices = () => {
                           size="sm"
                           variant="outline"
                           data-testid="download-invoice-button"
-                         // onClick={() => handleDownload(invoice)}
+                          onClick={() => handleDownload(invoice)}
                           className="border-teal-600 text-teal-600 hover:bg-teal-50"
                           title="Download PDF"
                         >
@@ -448,7 +449,7 @@ export const Invoices = () => {
                           size="sm"
                           variant="outline"
                           data-testid="send-email-button"
-                          // onClick={() => handleSendEmail(invoice.id)}
+                          onClick={() => handleSendEmail(invoice.id)}
                           className="border-blue-600 text-blue-600 hover:bg-blue-50"
                           title="Send via Email"
                           disabled={invoice.status === 'Paid'}

@@ -178,7 +178,6 @@ export const Samples = () => {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 w-16">#</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Supplier</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Product</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Date Received</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Technician</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Status</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Actions</th>
@@ -198,16 +197,13 @@ export const Samples = () => {
                     <td className="px-6 py-4 text-sm text-slate-600">{sample.supplier_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{sample.product_name}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">
-                      {sample.date_received ? new Date(sample.date_received).toLocaleDateString() : <span className="text-slate-400 italic">N/A</span>}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">
                       {sample.assigned_technician || (
                         <span className="text-slate-400 italic">Unassigned</span>
                       )}
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getStatusColor(sample.status)}`}>
-                        {sample.status}
+                        Active
                       </span>
                     </td>
                     <td className="px-6 py-4">

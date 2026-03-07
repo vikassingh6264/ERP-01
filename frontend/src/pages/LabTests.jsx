@@ -310,7 +310,6 @@ export const LabTests = () => {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Sample ID</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Test Method</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Technician</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Test Date</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Result</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Actions</th>
               </tr>
@@ -329,9 +328,6 @@ export const LabTests = () => {
                     <td className="px-6 py-4 text-sm font-medium text-slate-900 text-slate-600">{test.sample_id}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{test.test_method}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{test.technician_name}</td>
-                    <td className="px-6 py-4 text-sm text-slate-600">
-                      {test.test_date ? new Date(test.test_date).toLocaleDateString() : <span className="text-slate-400 italic">N/A</span>}
-                    </td>
                     <td className="px-6 py-4 text-sm text-slate-600">
                       <div className="max-w-xs truncate">{test.test_result}</div>
                     </td>

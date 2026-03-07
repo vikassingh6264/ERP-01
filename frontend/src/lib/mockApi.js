@@ -246,6 +246,26 @@ export const mockHttpAdapter = (method, url, data) => {
                             if (item) resolve({ status: 200, data: item });
                             else reject({ response: { status: 404, data: { detail: 'Not found' } } });
                         } else {
+                            // REPAIR LOGIC: Ensure all invoices have calculated totals and dates
+                            if (resource === 'invoices') {
+                                let changed = false;
+                                table.forEach(inv => {
+                                    if (!inv.total_amount || !inv.due_date || !inv.invoice_number) {
+                                        const qty = Number(inv.quantity || 0);
+                                        const price = Number(inv.unit_price || 0);
+                                        const tax = Number(inv.tax_percentage || 0);
+                                        inv.subtotal = qty * price;
+                                        inv.tax_amount = inv.subtotal * (tax / 100);
+                                        inv.total_amount = inv.subtotal + inv.tax_amount;
+                                        if (!inv.invoice_number) inv.invoice_number = `INV-${Math.random().toString().slice(2, 8)}`;
+                                        if (!inv.invoice_date) inv.invoice_date = inv.created_at || new Date().toISOString();
+                                        if (!inv.due_date) inv.due_date = new Date(new Date(inv.invoice_date).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                                        if (!inv.status) inv.status = 'Draft';
+                                        changed = true;
+                                    }
+                                });
+                                if (changed) saveDb(db);
+                            }
                             resolve({ status: 200, data: table });
                         }
                         break;
@@ -300,6 +320,19 @@ export const mockHttpAdapter = (method, url, data) => {
                                 db.inquiries[inquiryIndex].status = 'Completed';
                                 db.inquiries[inquiryIndex].updated_at = new Date().toISOString();
                             }
+                        } else if (resource === 'invoices') {
+                            const qty = Number(data.quantity || 0);
+                            const price = Number(data.unit_price || 0);
+                            const tax = Number(data.tax_percentage || 0);
+                            const subtotal = qty * price;
+                            const tax_amount = subtotal * (tax / 100);
+                            newItem.invoice_number = `INV-${Date.now().toString().slice(-6)}`;
+                            newItem.subtotal = subtotal;
+                            newItem.tax_amount = tax_amount;
+                            newItem.total_amount = subtotal + tax_amount;
+                            newItem.status = 'Draft';
+                            newItem.invoice_date = new Date().toISOString();
+                            newItem.due_date = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
                         }
 
                         saveDb(db);
