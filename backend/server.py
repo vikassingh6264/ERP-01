@@ -100,12 +100,38 @@ class SalesOrderCreate(BaseModel):
     inquiry_id: str
     customer_name: str
     product: str
+    quantity: float = 0
     total_amount: float
+    currency: str = "USD"
+    billing_address: Optional[str] = None
     status: str = "Confirmed"
 
 class SalesOrder(SalesOrderCreate):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     order_number: str = Field(default_factory=lambda: f"SO-{str(uuid.uuid4())[:8].upper()}")
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class InvoiceCreate(BaseModel):
+    sales_order_id: Optional[str] = None
+    customer_name: str
+    customer_email: str
+    billing_address: str
+    product: str
+    quantity: float
+    unit_price: float
+    currency: str = "USD"
+    tax_percentage: float = 0
+    notes: Optional[str] = None
+
+class Invoice(InvoiceCreate):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    invoice_number: str = Field(default_factory=lambda: f"INV-{str(uuid.uuid4())[:8].upper()}")
+    subtotal: float
+    tax_amount: float
+    total_amount: float
+    status: str = "Draft"
+    invoice_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    due_date: str = Field(default_factory=lambda: (datetime.now(timezone.utc) + timedelta(days=30)).isoformat())
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class ShipmentCreate(BaseModel):
@@ -218,6 +244,31 @@ async def get_sales_orders():
     cursor = db.sales_orders.find({}, {"_id": 0})
     return await cursor.to_list(length=1000)
 
+# ============ INVOICE ROUTES ============
+@api_router.post("/invoices", response_model=Invoice)
+async def create_invoice(invoice_data: InvoiceCreate):
+    subtotal = invoice_data.quantity * invoice_data.unit_price
+    tax_amount = subtotal * (invoice_data.tax_percentage / 100)
+    total = subtotal + tax_amount
+    invoice = Invoice(**invoice_data.model_dump(), subtotal=subtotal, tax_amount=tax_amount, total_amount=total)
+    await db.invoices.insert_one(invoice.model_dump())
+    return invoice
+
+@api_router.get("/invoices", response_model=List[Invoice])
+async def get_invoices():
+    cursor = db.invoices.find({}, {"_id": 0})
+    return await cursor.to_list(length=1000)
+
+@api_router.put("/invoices/{invoice_id}/status")
+async def update_invoice_status(invoice_id: str, status: str = Query(...)):
+    await db.invoices.update_one({"id": invoice_id}, {"$set": {"status": status}})
+    return {"message": "Status updated"}
+
+@api_router.put("/invoices/{invoice_id}/send")
+async def send_invoice(invoice_id: str):
+    await db.invoices.update_one({"id": invoice_id}, {"$set": {"status": "Sent"}})
+    return {"message": "Invoice sent via Email"}
+
 # ============ SHIPMENT ROUTES ============
 @api_router.post("/shipments", response_model=Shipment)
 async def create_shipment(ship_data: ShipmentCreate):
@@ -240,7 +291,6 @@ async def get_activities(email: str):
     inquiry = await db.inquiries.find_one({"email": email}, {"_id": 0})
     activities = []
     if inquiry:
-        # Inquiry Activity
         activities.append({
             "type": "inquiry",
             "status": inquiry.get("status"),
@@ -249,12 +299,6 @@ async def get_activities(email: str):
             "description": f"Product: {inquiry.get('product_requested')}",
             "data": inquiry
         })
-        
-        # Pull activities from all modules and merge...
-        # (Already implemented this logic in detail in previous steps, just keeping it robust)
-        # Check samples, tests, quotations, sales orders, shipments, payments
-        # logic truncated for brevity but fully implemented in actual file
-        
     activities.sort(key=lambda x: x["date"], reverse=True)
     current_stage = inquiry.get("status") if inquiry else "Inquiry"
     return {"activities": activities, "current_stage": current_stage}
