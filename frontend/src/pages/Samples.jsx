@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import api from '../utils/api';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -9,6 +10,7 @@ import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const Samples = () => {
+  const location = useLocation();
   const [samples, setSamples] = useState([]);
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +24,7 @@ export const Samples = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [location.key]);
 
   const fetchData = async () => {
     try {

@@ -355,9 +355,9 @@ export const Shipments = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2">
-                        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getStatusColor(shipment.status)}`}>
+                        {/* <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getStatusColor(shipment.status)}`}>
                           {shipment.status}
-                        </span>
+                        </span> */}
                         <Button
                           size="sm"
                           variant="outline"

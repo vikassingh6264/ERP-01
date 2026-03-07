@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import api from '../utils/api';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -11,6 +12,7 @@ import { ActivityTimeline } from '../components/ActivityTimeline';
 import { DataExportImport } from '../components/DataExportImport';
 
 export const Inquiries = () => {
+  const location = useLocation();
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -30,7 +32,7 @@ export const Inquiries = () => {
 
   useEffect(() => {
     fetchInquiries();
-  }, []);
+  }, [location.key]);
 
   const fetchInquiries = async () => {
     try {
@@ -323,7 +325,7 @@ export const Inquiries = () => {
                           size="sm"
                           variant="outline"
                           data-testid="view-activities-button"
-                          onClick={() => viewActivities(inquiry.email, inquiry.customer_name)}
+                          // onClick={() => viewActivities(inquiry.email, inquiry.customer_name)}
                           className="border-teal-600 text-teal-600 hover:bg-teal-50"
                         >
                           <Activity className="w-4 h-4" />

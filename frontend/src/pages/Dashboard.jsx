@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 import { Card } from '../components/ui/card';
@@ -10,8 +11,10 @@ import {
   TrendingUp,
   Package,
   AlertTriangle,
-  Truck
+  Truck,
+  RotateCw
 } from 'lucide-react';
+import { Button } from '../components/ui/button';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -42,12 +45,13 @@ ChartJS.register(
 
 export const Dashboard = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchStats();
-  }, [user]);
+  }, [user, location.key]);
 
   const fetchStats = async () => {
     try {
@@ -66,19 +70,40 @@ export const Dashboard = () => {
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
+  const handleManualRefresh = () => {
+    setLoading(true);
+    fetchStats();
+  };
+
+  if (loading && !stats) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Manrope, sans-serif' }}>
-          {user?.role} Dashboard
-        </h1>
-        <p className="text-base text-slate-600">
-          Welcome back, {user?.full_name}
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Manrope, sans-serif' }}>
+            {user?.role} Dashboard
+          </h1>
+          <p className="text-base text-slate-600">
+            Welcome back, {user?.full_name}
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleManualRefresh}
+          className="flex items-center gap-2 border-slate-200 text-slate-600 hover:bg-slate-50"
+          disabled={loading}
+        >
+          <RotateCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          Refresh
+        </Button>
       </div>
 
       {user?.role === 'Marketing' && <MarketingDashboard stats={stats} />}

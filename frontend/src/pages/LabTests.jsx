@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import api from '../utils/api';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -11,6 +12,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 export const LabTests = () => {
+  const location = useLocation();
   const [tests, setTests] = useState([]);
   const [samples, setSamples] = useState([]);
   const [chemicals, setChemicals] = useState([]);
@@ -27,7 +29,7 @@ export const LabTests = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [location.key]);
 
   const fetchData = async () => {
     try {

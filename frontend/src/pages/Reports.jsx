@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import api from '../utils/api';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -40,6 +41,7 @@ import {
 import { toast } from 'sonner';
 
 export const Reports = () => {
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [reportData, setReportData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
@@ -47,7 +49,7 @@ export const Reports = () => {
 
   useEffect(() => {
     fetchReportData();
-  }, []);
+  }, [location.key]);
 
   const fetchReportData = async () => {
     try {
