@@ -73,7 +73,7 @@ export const DashboardLayout = ({ children }) => {
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex lg:flex-col w-64 bg-slate-900 text-white">
         <div className="p-4 border-b border-slate-800">
-          <h1 className="text-2xl font-bold" style={{ fontFamily: 'Manrope, sans-serif' }}>
+          <h1 className="text-xl font-bold " style={{ fontFamily: 'Manrope, sans-serif' }}>
             Ashoka Technovations
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">ERP & Lab Management</p>

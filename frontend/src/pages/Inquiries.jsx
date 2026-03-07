@@ -6,7 +6,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card } from '../components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
-import { Plus, Edit, Activity } from 'lucide-react';
+import { Plus, Activity, } from 'lucide-react';
 import { toast } from 'sonner';
 import { ActivityTimeline } from '../components/ActivityTimeline';
 import { DataExportImport } from '../components/DataExportImport';
@@ -135,8 +135,13 @@ export const Inquiries = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'New': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'Quoted': return 'bg-slate-100 text-slate-800 border-slate-200';
-      case 'Closed': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      case 'Sample Testing': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'Lab Testing': return 'bg-indigo-100 text-indigo-800 border-indigo-200';
+      case 'Quoted': return 'bg-amber-100 text-amber-800 border-amber-200';
+      case 'Order Confirmed': return 'bg-cyan-100 text-cyan-800 border-cyan-200';
+      case 'In Transit': return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'Completed': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      case 'Closed': return 'bg-slate-100 text-slate-800 border-slate-200';
       default: return 'bg-slate-100 text-slate-800 border-slate-200';
     }
   };
@@ -305,32 +310,21 @@ export const Inquiries = () => {
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getStatusColor(inquiry.status)}`}>
-                        {inquiry.status}
+                      <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getStatusColor(inquiry.status || 'New')} shadow-sm`}>
+                        {inquiry.status || 'New'}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex gap-2">
-                        <select
-                          data-testid="status-select"
-                          value={inquiry.status}
-                          onChange={(e) => updateStatus(inquiry.id, e.target.value)}
-                          className="text-sm border border-slate-300 rounded px-2 py-1"
-                        >
-                          <option value="New">New</option>
-                          <option value="Quoted">Quoted</option>
-                          <option value="Closed">Closed</option>
-                        </select>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          data-testid="view-activities-button"
-                          // onClick={() => viewActivities(inquiry.email, inquiry.customer_name)}
-                          className="border-teal-600 text-teal-600 hover:bg-teal-50"
-                        >
-                          <Activity className="w-4 h-4" />
-                        </Button>
-                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        data-testid="view-activities-button"
+                        onClick={() => viewActivities(inquiry.email, inquiry.customer_name)}
+                        className="border-teal-600 text-teal-600 hover:bg-teal-50 flex items-center gap-1.5 h-8 px-2"
+                      >
+                        <Activity className="w-3.5 h-3.5" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider">Journey</span>
+                      </Button>
                     </td>
                   </tr>
                 ))
@@ -340,11 +334,10 @@ export const Inquiries = () => {
         </div>
       </Card>
 
-      {/* Activity Timeline Dialog */}
       <Dialog open={isActivityDialogOpen} onOpenChange={setIsActivityDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto !bg-slate-50">
           <DialogHeader>
-            <DialogTitle>Customer Activities - {selectedCustomer}</DialogTitle>
+            <DialogTitle>Customer Progress Tracker - {selectedCustomer}</DialogTitle>
           </DialogHeader>
           <ActivityTimeline activities={activities} currentStage={currentStage} />
         </DialogContent>

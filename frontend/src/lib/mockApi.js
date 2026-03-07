@@ -107,7 +107,8 @@ export const mockHttpAdapter = (method, url, data) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             const db = getDb();
-            let pathContent = url.replace(/^[/#_A-Za-z0-9]*\/api/, ''); // Remove base API part if present
+            const urlNoQuery = url.split('?')[0];
+            let pathContent = urlNoQuery.replace(/^[/#_A-Za-z0-9]*\/api/, ''); // Remove base API part if present
             if (pathContent.startsWith('/')) pathContent = pathContent.slice(1);
 
             const segments = pathContent.split('/').filter(Boolean);
@@ -115,6 +116,100 @@ export const mockHttpAdapter = (method, url, data) => {
             const id = segments[1];
 
             try {
+                // Determine update data early for PUT/POST
+                let updateData = { ...(data || {}) };
+
+                // If query string exists, parse it for potential status/params
+                if (url.includes('?')) {
+                    const queryString = url.split('?')[1];
+                    const params = new URLSearchParams(queryString);
+                    params.forEach((value, key) => {
+                        updateData[key] = value;
+                    });
+                }
+
+                // Journey / activities logic
+                if (resource === 'activities' && segments[1] === 'customer') {
+                    const customerEmail = segments[2];
+                    const acts = [];
+
+                    const inquiry = db.inquiries.find(i => i.email === customerEmail);
+                    if (inquiry) {
+                        acts.push({
+                            type: 'inquiry',
+                            status: inquiry.status || 'New',
+                            date: inquiry.created_at,
+                            title: 'Customer Inquiry Created',
+                            description: `Product: ${inquiry.product_requested}`,
+                            data: inquiry
+                        });
+
+                        // Samples for this inquiry
+                        const samples = db.samples.filter(s => s.inquiry_id === inquiry.id);
+                        samples.forEach(sample => {
+                            acts.push({
+                                type: 'sample',
+                                status: sample.status || 'Received',
+                                date: sample.date_received || sample.created_at,
+                                title: `Sample Received - ${sample.sample_id}`,
+                                description: `Product: ${sample.product_name}`,
+                                data: sample
+                            });
+
+                            // Tests for this sample
+                            const tests = db.lab_tests.filter(t => t.sample_id === sample.sample_id);
+                            tests.forEach(test => {
+                                acts.push({
+                                    type: 'test',
+                                    status: test.status || 'Completed',
+                                    date: test.test_date || test.created_at,
+                                    title: 'Lab Test Completed',
+                                    description: `Method: ${test.test_method}`,
+                                    data: test
+                                });
+                            });
+                        });
+
+                        // Quotations for this inquiry
+                        const quotes = db.quotations.filter(q => q.inquiry_id === inquiry.id);
+                        quotes.forEach(quote => {
+                            acts.push({
+                                type: 'quotation',
+                                status: quote.status || 'Sent',
+                                date: quote.created_at,
+                                title: `Quotation Sent - ${quote.quotation_number}`,
+                                description: `Amount: ${quote.currency} ${quote.total_amount}`,
+                                data: quote
+                            });
+                        });
+                    }
+
+                    acts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                    const getStage = (activities) => {
+                        if (activities.length === 0) return 'No Activity';
+                        const stageMap = {
+                            inquiry: 'Inquiry',
+                            sample: 'Sample Testing',
+                            test: 'Lab Testing',
+                            quotation: 'Quotation',
+                            sales_order: 'Order Confirmed',
+                            shipment: 'In Transit',
+                            payment: 'Completed'
+                        };
+                        return stageMap[activities[0].type] || 'Inquiry';
+                    };
+
+                    resolve({
+                        status: 200,
+                        data: {
+                            activities: acts,
+                            current_stage: getStage(acts)
+                        }
+                    });
+                    return;
+                }
+
                 if (resource === 'stats') {
                     // Special logic for Dashboard stats
                     resolve({
@@ -159,9 +254,54 @@ export const mockHttpAdapter = (method, url, data) => {
                         const newItem = {
                             id: `${resource}_${Date.now()}`,
                             created_at: new Date().toISOString(),
+                            status: resource === 'inquiries' ? 'New' : (resource === 'quotations' ? 'Sent' : undefined),
                             ...data,
                         };
                         table.push(newItem);
+
+                        // AUTOMATION: Update Inquiry status based on actions
+                        if (resource === 'quotations' && data.inquiry_id) {
+                            const inquiryIndex = db.inquiries.findIndex(i => i.id === data.inquiry_id);
+                            if (inquiryIndex !== -1) {
+                                db.inquiries[inquiryIndex].status = 'Quoted';
+                                db.inquiries[inquiryIndex].updated_at = new Date().toISOString();
+                            }
+                        } else if (resource === 'samples' && data.inquiry_id) {
+                            const inquiryIndex = db.inquiries.findIndex(i => i.id === data.inquiry_id);
+                            if (inquiryIndex !== -1) {
+                                db.inquiries[inquiryIndex].status = 'Sample Testing';
+                                db.inquiries[inquiryIndex].updated_at = new Date().toISOString();
+                            }
+                        } else if (resource === 'lab_tests' && data.sample_id) {
+                            // Find sample to find inquiry
+                            const sample = db.samples.find(s => s.sample_id === data.sample_id);
+                            if (sample && sample.inquiry_id) {
+                                const inquiryIndex = db.inquiries.findIndex(i => i.id === sample.inquiry_id);
+                                if (inquiryIndex !== -1) {
+                                    db.inquiries[inquiryIndex].status = 'Lab Testing';
+                                    db.inquiries[inquiryIndex].updated_at = new Date().toISOString();
+                                }
+                            }
+                        } else if (resource === 'sales_orders' && data.inquiry_id) {
+                            const inquiryIndex = db.inquiries.findIndex(i => i.id === data.inquiry_id);
+                            if (inquiryIndex !== -1) {
+                                db.inquiries[inquiryIndex].status = 'Order Confirmed';
+                                db.inquiries[inquiryIndex].updated_at = new Date().toISOString();
+                            }
+                        } else if (resource === 'shipments' && data.inquiry_id) {
+                            const inquiryIndex = db.inquiries.findIndex(i => i.id === data.inquiry_id);
+                            if (inquiryIndex !== -1) {
+                                db.inquiries[inquiryIndex].status = 'In Transit';
+                                db.inquiries[inquiryIndex].updated_at = new Date().toISOString();
+                            }
+                        } else if (resource === 'payments' && data.inquiry_id) {
+                            const inquiryIndex = db.inquiries.findIndex(i => i.id === data.inquiry_id);
+                            if (inquiryIndex !== -1) {
+                                db.inquiries[inquiryIndex].status = 'Completed';
+                                db.inquiries[inquiryIndex].updated_at = new Date().toISOString();
+                            }
+                        }
+
                         saveDb(db);
                         resolve({ status: 201, data: newItem });
                         break;
@@ -170,7 +310,7 @@ export const mockHttpAdapter = (method, url, data) => {
                         if (!id) throw new Error('ID required for PUT');
                         const index = table.findIndex(item => item.id === id);
                         if (index !== -1) {
-                            table[index] = { ...table[index], ...data, updated_at: new Date().toISOString() };
+                            table[index] = { ...table[index], ...updateData, updated_at: new Date().toISOString() };
                             saveDb(db);
                             resolve({ status: 200, data: table[index] });
                         } else {

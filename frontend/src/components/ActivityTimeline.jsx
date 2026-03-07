@@ -17,26 +17,32 @@ export const ActivityTimeline = ({ activities, currentStage }) => {
 
   const getStatusColor = (type, status) => {
     const statusMap = {
-      'inquiry': { New: 'blue', Quoted: 'slate', Closed: 'emerald' },
-      'sample': { Received: 'blue', Tested: 'emerald' },
+      'inquiry': { New: 'blue', 'Sample Testing': 'purple', 'Lab Testing': 'indigo', Quoted: 'amber', 'Order Confirmed': 'cyan', 'In Transit': 'orange', Completed: 'emerald', Closed: 'slate' },
+      'sample': { Received: 'blue', Testing: 'purple', Tested: 'emerald' },
       'test': { Completed: 'emerald' },
       'quotation': { Sent: 'blue', Accepted: 'emerald', Rejected: 'red' },
       'sales_order': { Confirmed: 'blue', Processing: 'slate', Completed: 'emerald' },
       'shipment': { 'In Transit': 'blue', Delivered: 'emerald', Delayed: 'red' },
       'payment': { Received: 'emerald' },
     };
-    
+
     const color = statusMap[type]?.[status] || 'slate';
-    return {
-      bg: `bg-${color}-100`,
-      text: `text-${color}-800`,
-      border: `border-${color}-200`,
-      icon: `bg-${color}-500`,
+    const colors = {
+      blue: { bg: 'bg-blue-100', text: 'text-blue-800', border: 'border-blue-200', icon: 'bg-blue-500' },
+      emerald: { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-200', icon: 'bg-emerald-500' },
+      slate: { bg: 'bg-slate-100', text: 'text-slate-800', border: 'border-slate-200', icon: 'bg-slate-500' },
+      purple: { bg: 'bg-purple-100', text: 'text-purple-800', border: 'border-purple-200', icon: 'bg-purple-500' },
+      indigo: { bg: 'bg-indigo-100', text: 'text-indigo-800', border: 'border-indigo-200', icon: 'bg-indigo-500' },
+      amber: { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-200', icon: 'bg-amber-500' },
+      cyan: { bg: 'bg-cyan-100', text: 'text-cyan-800', border: 'border-cyan-200', icon: 'bg-cyan-500' },
+      orange: { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-200', icon: 'bg-orange-500' },
+      red: { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-200', icon: 'bg-red-500' },
     };
+    return colors[color] || colors.slate;
   };
 
   const getStageProgress = (stage) => {
-    const stages = ['Inquiry', 'Sample Testing', 'Lab Testing', 'Quotation', 'Order Confirmed', 'In Transit', 'Completed'];
+    const stages = ['Inquiry', 'Quotation'];
     const currentIndex = stages.indexOf(stage);
     return ((currentIndex + 1) / stages.length) * 100;
   };
@@ -53,7 +59,7 @@ export const ActivityTimeline = ({ activities, currentStage }) => {
             <p className="text-slate-300 mt-1">Track your customer journey through the complete workflow</p>
           </div>
         </div>
-        
+
         {/* Progress Bar */}
         <div className="mt-4">
           <div className="w-full bg-slate-700 rounded-full h-3">
@@ -64,11 +70,7 @@ export const ActivityTimeline = ({ activities, currentStage }) => {
           </div>
           <div className="flex justify-between mt-2 text-xs text-slate-400">
             <span>Inquiry</span>
-            <span>Testing</span>
             <span>Quotation</span>
-            <span>Order</span>
-            <span>Shipment</span>
-            <span>Complete</span>
           </div>
         </div>
       </div>
@@ -89,7 +91,7 @@ export const ActivityTimeline = ({ activities, currentStage }) => {
             activities.map((activity, index) => {
               const Icon = getIcon(activity.type);
               const colors = getStatusColor(activity.type, activity.status);
-              
+
               return (
                 <div key={index} className="relative flex gap-4" data-testid="activity-item">
                   {/* Icon */}
